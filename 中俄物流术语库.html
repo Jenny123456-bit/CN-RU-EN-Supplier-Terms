@@ -1,0 +1,3225 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<!-- 单文件构建产物 · 由 scripts/build-single.mjs 生成 · 源仓库中请改源文件而非本文件 -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中俄双语物流术语库 · CN–RU Logistics Glossary</title>
+<meta name="description" content="换装 / 关务 / 舱位 / 单证 四类中俄物流核心术语，三语对照、易错点提示、单证译法校验、开放 API 与 AI 术语助手。">
+<meta name="keywords" content="中俄物流,物流术语,перегрузка,слот,таможня,中欧班列,术语库,glossary,CN-RU,logistics">
+<meta name="author" content="CN–RU Logistics Glossary">
+<meta property="og:type" content="website">
+<meta property="og:title" content="中俄双语物流术语库 · 译准，才不赔钱">
+<meta property="og:description" content="同一票货，国内叫「换装」，俄方单证写「перегрузка」。139 条三语对照术语 + 单证译法校验 + 开放 API。">
+<meta property="og:image" content="https://raw.githubusercontent.com/OWNER/REPO/main/docs/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0C0E'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='none' stroke='%23C8A15A' stroke-width='1.6'/%3E%3C/svg%3E">
+<style>
+/* ============================================================
+   中俄双语物流术语库 — 样式
+   设计：暗色编辑排版 + 金色描边；浅色为同结构的暖纸版本
+   ============================================================ */
+
+:root {
+  --font-display: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Mono", "Consolas", monospace;
+
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --maxw: 1440px;
+}
+
+html[data-theme="dark"] {
+  --bg: #0A0B0D;
+  --bg-elev: #0E1014;
+  --panel: #101217;
+  --panel-2: #15181E;
+  --line: rgba(255, 255, 255, .075);
+  --line-2: rgba(255, 255, 255, .16);
+  --ink: #EDEAE3;
+  --ink-2: #A6A29A;
+  --ink-3: #6B6760;
+  --gold: #C8A15A;
+  --gold-2: #E3C07B;
+  --gold-dim: rgba(200, 161, 90, .13);
+  --high: #D46A4E;
+  --ok: #6FA88C;
+  --glow: rgba(200, 161, 90, .10);
+  --shadow: 0 24px 60px -28px rgba(0, 0, 0, .9);
+}
+
+html[data-theme="light"] {
+  --bg: #F7F4ED;
+  --bg-elev: #FCFAF5;
+  --panel: #FFFFFF;
+  --panel-2: #FAF7F0;
+  --line: rgba(28, 24, 18, .10);
+  --line-2: rgba(28, 24, 18, .20);
+  --ink: #171512;
+  --ink-2: #5B564C;
+  --ink-3: #8B8578;
+  --gold: #8B6828;
+  --gold-2: #A9823C;
+  --gold-dim: rgba(139, 104, 40, .10);
+  --high: #AF4B34;
+  --ok: #3D7561;
+  --glow: rgba(139, 104, 40, .08);
+  --shadow: 0 20px 50px -30px rgba(60, 48, 30, .35);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, p, ul, li, figure { margin: 0; }
+ul { padding-left: 1.1em; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+code { font-family: var(--font-mono); font-size: .92em; }
+
+::selection { background: var(--gold-dim); color: var(--ink); }
+
+/* 背景氛围 */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(680px 380px at 12% -8%, var(--glow), transparent 70%),
+    radial-gradient(520px 320px at 92% 4%, rgba(120, 140, 180, .05), transparent 72%);
+}
+
+/* ── 顶栏 ─────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 clamp(16px, 3vw, 34px);
+  height: 62px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+
+.mark {
+  width: 22px; height: 22px;
+  border: 1.2px solid var(--gold);
+  transform: rotate(45deg);
+  position: relative;
+  transition: transform .5s var(--ease);
+}
+.mark::after {
+  content: "";
+  position: absolute; inset: 4px;
+  border: 1px solid var(--gold);
+  opacity: .55;
+}
+.brand:hover .mark { transform: rotate(135deg); }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-text b {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.brand-text i {
+  font-style: normal;
+  font-size: 8.5px;
+  letter-spacing: .26em;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+}
+
+.nav { display: flex; gap: 2px; margin-left: 10px; }
+
+.nav-btn {
+  position: relative;
+  padding: 7px 13px;
+  font-size: 13px;
+  color: var(--ink-2);
+  border-radius: var(--r-sm);
+  transition: color .2s, background .2s;
+}
+.nav-btn:hover { color: var(--ink); background: var(--panel-2); }
+.nav-btn.is-active { color: var(--ink); }
+.nav-btn.is-active::after {
+  content: "";
+  position: absolute;
+  left: 13px; right: 13px; bottom: -19px;
+  height: 1.5px;
+  background: var(--gold);
+}
+
+.top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.icon-btn {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  font-size: 13px;
+  transition: all .2s;
+}
+.icon-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 15px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  border: 1px solid var(--line-2);
+  color: var(--ink);
+  transition: all .2s var(--ease);
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--gold); color: var(--gold-2); }
+.btn-sm { padding: 5px 11px; font-size: 12px; }
+
+.btn-gold {
+  background: linear-gradient(180deg, var(--gold-2), var(--gold));
+  border-color: transparent;
+  color: #17130A;
+  font-weight: 600;
+  box-shadow: 0 6px 18px -10px var(--gold);
+}
+.btn-gold:hover { color: #17130A; filter: brightness(1.06); }
+
+.btn-ghost { border-color: var(--line); color: var(--ink-2); }
+
+.pulse {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #17130A;
+  opacity: .5;
+  animation: pulse 2.4s infinite;
+}
+@keyframes pulse { 0%,100% { opacity: .25; transform: scale(.85); } 50% { opacity: .8; transform: scale(1.25); } }
+
+/* ── 视图 ─────────────────────────────────────────── */
+main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 38px) clamp(16px, 3vw, 34px) 60px;
+}
+
+.view { display: none; animation: fadeUp .45s var(--ease) both; }
+.view.is-active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ── Hero ─────────────────────────────────────────── */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 60px);
+  align-items: end;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.4vw, 42px);
+  line-height: 1.28;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--gold);
+  position: relative;
+}
+.hero h1 em::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: .06em;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  opacity: .6;
+}
+
+.lede {
+  margin-top: 16px;
+  max-width: 60ch;
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--ink-2);
+}
+.lede b { color: var(--ink); font-weight: 600; }
+
+.gauge-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 11px;
+}
+.tag-gold { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, transparent); background: var(--gold-dim); }
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.metric {
+  background: var(--panel);
+  padding: 15px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.metric b {
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.metric span { font-size: 10.5px; color: var(--ink-3); letter-spacing: .02em; }
+.metric-live b { color: var(--gold); }
+
+/* ── 搜索 ─────────────────────────────────────────── */
+.searchbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+  padding: 0 16px;
+  height: 54px;
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  transition: border-color .2s, box-shadow .3s;
+}
+.searchbar:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+.searchbar .ico {
+  width: 17px; height: 17px;
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.6;
+  flex-shrink: 0;
+}
+.searchbar input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  font-size: 14.5px;
+  letter-spacing: .01em;
+}
+.searchbar input::placeholder { color: var(--ink-3); }
+.searchbar input::-webkit-search-cancel-button { filter: grayscale(1); opacity: .5; }
+.hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+
+/* ── 分类筛选 ─────────────────────────────────────── */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 18px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 10px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: all .18s var(--ease);
+}
+.chip:hover { color: var(--ink); border-color: var(--line-2); }
+.chip .cat-dot { width: 5px; height: 5px; }
+.chip .n {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+}
+.chip.is-active {
+  color: var(--ink);
+  border-color: var(--gold);
+  background: var(--gold-dim);
+}
+.chip.is-active .n { color: var(--gold); }
+
+/* ── 主网格 ───────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 392px;
+  gap: 18px;
+  align-items: start;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-2), transparent);
+}
+.panel-title { display: flex; align-items: baseline; gap: 9px; min-width: 0; }
+.panel-title span { font-size: 12.5px; letter-spacing: .04em; }
+.panel-title small { font-size: 10.5px; color: var(--ink-3); font-family: var(--font-mono); }
+
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px;
+  flex-shrink: 0;
+}
+.seg-btn {
+  font-size: 11px;
+  color: var(--ink-3);
+  padding: 3px 10px;
+  border-radius: 999px;
+  transition: all .18s;
+}
+.seg-btn.is-active { background: var(--gold-dim); color: var(--gold); }
+
+/* 表格 */
+.table-wrap { overflow-x: auto; }
+
+table.terms {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+table.terms th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 2;
+}
+table.terms td { padding: 0 12px; border-bottom: 1px solid var(--line); }
+
+.row { cursor: pointer; transition: background .15s; }
+.row > td { height: 46px; vertical-align: middle; }
+.row:hover { background: var(--panel-2); }
+.row.is-active { background: var(--gold-dim); }
+.row.is-active > td:first-child { box-shadow: inset 2px 0 0 var(--gold); }
+
+.col-cat { width: 118px; }
+.col-en { width: 25%; }
+.cat-cell { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--ink-3); }
+.cat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.inline-cat { display: none; }
+
+.cell-cn { font-weight: 500; letter-spacing: .01em; display: flex; align-items: center; gap: 7px; }
+.cell-ru { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-2); }
+.cell-en { color: var(--ink-3); font-size: 12px; }
+.row.is-active .cell-ru { color: var(--gold); }
+
+.risk-flag {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--high);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--high) 18%, transparent);
+}
+
+mark {
+  background: color-mix(in srgb, var(--gold) 26%, transparent);
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  font-size: 11px;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  border-top: 1px solid var(--line);
+}
+.pager .btn[hidden] { display: none; }
+
+/* ── 详情面板 ─────────────────────────────────────── */
+.detail-panel { position: sticky; top: 78px; max-height: calc(100vh - 96px); overflow-y: auto; }
+
+.detail { padding: 20px 20px 22px; }
+
+.d-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.d-eyebrow .id { color: var(--ink-3); letter-spacing: .06em; margin-left: auto; }
+
+.d-lang { margin-top: 13px; }
+.d-lang:first-of-type { margin-top: 0; }
+.d-lang-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px 0;
+  margin-bottom: 5px;
+}
+.d-lang .d-cn, .d-lang .d-ru, .d-lang .d-en { margin-top: 0; }
+
+.d-cn {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.d-ru {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--gold);
+  margin-top: 8px;
+  word-break: break-word;
+  line-height: 1.4;
+}
+.d-en {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 5px;
+  letter-spacing: .02em;
+  word-break: break-word;
+}
+
+.d-sep { height: 1px; background: var(--line); margin: 18px 0; }
+
+.d-label {
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+
+.alt-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.alt-chip {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  transition: all .18s;
+}
+.alt-chip:hover { color: var(--gold); border-color: var(--gold); }
+
+.d-note {
+  border-left: 2px solid var(--gold);
+  background: var(--gold-dim);
+  padding: 10px 13px;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+.d-ex { font-size: 12.5px; line-height: 1.8; }
+.d-ex .cn { color: var(--ink); }
+.d-ex .ru {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-top: 5px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line-2);
+}
+
+.d-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.meta-pill {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+.meta-pill.risk { color: var(--high); border-color: color-mix(in srgb, var(--high) 40%, transparent); }
+
+.d-actions { display: flex; gap: 8px; margin-top: 18px; }
+.d-actions .btn { flex: 1; justify-content: center; }
+
+.d-rel { display: flex; flex-direction: column; gap: 1px; }
+.rel-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  transition: background .15s;
+}
+.rel-item:hover { background: var(--panel-2); }
+.rel-item b { font-size: 12px; font-weight: 500; }
+.rel-item span { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.d-empty {
+  padding: 56px 24px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+.d-empty .mark-lg {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 40px;
+  color: var(--gold);
+  opacity: .3;
+  margin-bottom: 12px;
+}
+
+/* ── 区块标题 ─────────────────────────────────────── */
+.section-head { max-width: 780px; margin-bottom: 26px; }
+.section-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* ── 单证校验 ─────────────────────────────────────── */
+.audit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+#auditText {
+  width: 100%;
+  min-height: 320px;
+  resize: vertical;
+  border: 0;
+  outline: none;
+  background: var(--panel);
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.9;
+  font-family: var(--font-mono);
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+#auditText::placeholder { color: var(--ink-3); line-height: 1.9; }
+
+.audit-tools { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+
+.audit-cost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 12px 16px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.audit-cost label { display: inline-flex; align-items: center; gap: 5px; }
+.audit-cost input {
+  width: 64px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  outline: none;
+}
+.audit-cost input:focus { border-color: var(--gold); }
+
+.audit-result { min-height: 380px; }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 380px;
+  padding: 30px;
+  text-align: center;
+}
+.empty-mark { font-size: 30px; color: var(--gold); opacity: .35; }
+.empty-state p { font-size: 13px; }
+.empty-state small { font-size: 11.5px; color: var(--ink-3); line-height: 1.7; max-width: 34ch; }
+
+.audit-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.sum-item { background: var(--panel-2); padding: 14px 16px; }
+.sum-item b {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+.sum-item span { font-size: 10px; color: var(--ink-3); letter-spacing: .04em; }
+.sum-item.danger b { color: var(--high); }
+.sum-item.safe b { color: var(--ok); }
+
+.findings { padding: 6px 0 10px; max-height: 420px; overflow-y: auto; }
+
+.finding {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 10px;
+}
+.finding:last-child { border-bottom: 0; }
+
+.sev {
+  flex-shrink: 0;
+  width: 4px;
+  border-radius: 2px;
+  margin-top: 2px;
+}
+.sev.high { background: var(--high); }
+.sev.mid { background: var(--gold); }
+.sev.low { background: var(--ink-3); }
+
+.f-main { min-width: 0; flex: 1; }
+.f-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.f-head b { font-size: 12.5px; font-weight: 600; }
+.f-head .f-cat { font-size: 9.5px; color: var(--ink-3); border: 1px solid var(--line); border-radius: 3px; padding: 1px 5px; }
+.f-msg { font-size: 11.5px; color: var(--ink-2); margin-top: 4px; line-height: 1.65; }
+.f-snip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  background: var(--panel-2);
+  border-radius: 4px;
+  padding: 5px 8px;
+  margin-top: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cost-card {
+  border-top: 1px solid var(--line);
+  padding: 14px 16px;
+  background: linear-gradient(180deg, transparent, var(--gold-dim));
+}
+.cost-card .row-line { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-2); padding: 3px 0; }
+.cost-card .total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 8px;
+  padding-top: 9px;
+  border-top: 1px dashed var(--line-2);
+  font-size: 12px;
+}
+.cost-card .total b {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── API 视图 ─────────────────────────────────────── */
+.api-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.api-card { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.api-card h3, .api-doc h3, .panel > h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+}
+.api-card p { font-size: 12.5px; line-height: 1.75; color: var(--ink-2); }
+
+.code-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 7px 8px 7px 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  overflow: hidden;
+}
+.code-line code { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-2); }
+
+.copy-btn {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+  transition: all .18s;
+}
+.copy-btn:hover { color: var(--gold); border-color: var(--gold); }
+.copy-btn.wide { align-self: flex-start; }
+.copy-btn.done { color: var(--ok); border-color: var(--ok); }
+
+.code-block {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+}
+.console-panel { margin-bottom: 18px; }
+.console-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  color: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  border-radius: 3px;
+  padding: 2px 6px;
+}
+
+.console-bar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.console-method {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--ok);
+  border: 1px solid color-mix(in srgb, var(--ok) 40%, transparent);
+  border-radius: 3px;
+  padding: 4px 7px;
+}
+.console-bar select, .console-bar input {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 6px 9px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  outline: none;
+  max-width: 100%;
+}
+.console-bar input { flex: 1; min-width: 140px; }
+.console-bar select:focus, .console-bar input:focus { border-color: var(--gold); }
+
+.console-panel .code-block { margin: 12px 16px; max-height: 340px; overflow: auto; }
+.json-hl-k { color: var(--gold); }
+.json-hl-s { color: var(--ok); }
+.json-hl-n { color: var(--high); }
+
+.console-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 0 16px 14px;
+}
+
+.api-doc { padding: 18px; }
+.doc-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0; }
+.doc-table th {
+  text-align: left;
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line-2);
+}
+.doc-table td { padding: 9px 10px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.doc-table td:first-child { color: var(--ink); font-family: var(--font-mono); font-size: 11.5px; white-space: nowrap; }
+.doc-table td:nth-child(2) { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+
+/* ── 关于 ─────────────────────────────────────────── */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+.about-grid .panel { padding: 20px; }
+.about-grid h3 { margin-bottom: 12px; font-family: var(--font-display); font-size: 16px; }
+.about-grid p { font-size: 12.5px; line-height: 1.85; color: var(--ink-2); margin-bottom: 10px; }
+.about-grid p b { color: var(--ink); }
+
+.plain-list { font-size: 12.5px; line-height: 1.9; color: var(--ink-2); }
+.plain-list li { margin-bottom: 6px; }
+.plain-list b { color: var(--ink); }
+
+.dim { color: var(--ink-3); }
+.tiny { font-size: 11px; line-height: 1.7; }
+.inline {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* ── 页脚 ─────────────────────────────────────────── */
+.site-foot {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: var(--maxw);
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px clamp(16px, 3vw, 34px) 26px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  font-family: var(--font-mono);
+  color: var(--ink-2);
+  text-transform: uppercase;
+}
+.site-foot .dim:last-child { margin-left: auto; }
+
+/* ── AI 助手 ──────────────────────────────────────── */
+.ai-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 46px;
+  padding: 0 18px 0 15px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--gold-2), var(--gold));
+  color: #17130A;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  box-shadow: 0 14px 34px -14px var(--gold), 0 3px 10px rgba(0,0,0,.3);
+  transition: transform .25s var(--ease), box-shadow .25s;
+}
+.ai-fab svg { width: 17px; height: 17px; fill: none; stroke: #17130A; stroke-width: 1.6; }
+.ai-fab:hover { transform: translateY(-2px); box-shadow: 0 20px 40px -16px var(--gold); }
+.ai-fab.is-hidden { opacity: 0; pointer-events: none; transform: scale(.9); }
+
+.ai-panel {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 70;
+  width: min(400px, calc(100vw - 32px));
+  max-height: min(640px, calc(100vh - 44px));
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--bg-elev) 96%, transparent);
+  backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transform-origin: bottom right;
+  animation: pop .3s var(--ease) both;
+}
+.ai-panel.is-hidden { display: none; }
+@keyframes pop { from { opacity: 0; transform: scale(.94) translateY(10px); } to { opacity: 1; transform: none; } }
+
+.ai-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.ai-id { display: flex; align-items: center; gap: 10px; }
+.ai-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-3) 20%, transparent);
+}
+.ai-dot.live { background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
+.ai-id b { display: block; font-size: 13px; letter-spacing: .03em; }
+.ai-id small { display: block; font-size: 10px; color: var(--ink-3); font-family: var(--font-mono); margin-top: 2px; }
+.ai-head-actions { display: flex; gap: 6px; }
+
+.ai-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-behavior: smooth;
+}
+
+.msg {
+  max-width: 92%;
+  font-size: 12.5px;
+  line-height: 1.8;
+  padding: 10px 13px;
+  border-radius: 12px;
+  word-break: break-word;
+}
+.msg-bot {
+  align-self: flex-start;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+}
+.msg-user {
+  align-self: flex-end;
+  background: var(--gold-dim);
+  border: 1px solid color-mix(in srgb, var(--gold) 34%, transparent);
+  border-bottom-right-radius: 4px;
+}
+.msg-bot p { margin: 0 0 8px; }
+.msg-bot p:last-child { margin-bottom: 0; }
+.msg-bot b { color: var(--gold-2); }
+.msg-bot code {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-size: 11px;
+}
+.msg-bot ul { margin: 6px 0; padding-left: 1.15em; }
+.msg-bot li { margin-bottom: 4px; }
+.msg-sys {
+  align-self: center;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  text-align: center;
+  max-width: 100%;
+}
+.msg-err {
+  align-self: stretch;
+  border-color: color-mix(in srgb, var(--high) 45%, transparent);
+  background: color-mix(in srgb, var(--high) 8%, transparent);
+  font-size: 11.5px;
+}
+.term-card {
+  align-self: stretch;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  background: var(--panel-2);
+  padding: 10px 12px;
+}
+.term-card .tc-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.term-card .tc-h b { font-size: 13px; }
+.term-card .tc-h span { font-family: var(--font-mono); font-size: 12px; color: var(--gold); }
+.term-card .tc-e { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+.term-card .tc-n { font-size: 11.5px; color: var(--ink-2); margin-top: 6px; line-height: 1.7; }
+
+.caret {
+  display: inline-block;
+  width: 6px; height: 12px;
+  background: var(--gold);
+  vertical-align: -1px;
+  animation: blink .9s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.ai-quick {
+  display: flex;
+  gap: 6px;
+  padding: 0 14px 10px;
+  flex-wrap: wrap;
+}
+.ai-quick button {
+  font-size: 10.5px;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 9px;
+  transition: all .18s;
+  white-space: nowrap;
+}
+.ai-quick button:hover { color: var(--gold); border-color: var(--gold); }
+.ai-quick.is-hidden { display: none; }
+
+.ai-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 0 12px;
+  padding: 8px 8px 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  transition: border-color .2s;
+}
+.ai-input:focus-within { border-color: var(--gold); }
+.ai-input textarea {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: none;
+  resize: none;
+  font-size: 12.5px;
+  line-height: 1.7;
+  max-height: 96px;
+  padding: 3px 0;
+}
+.ai-input textarea::placeholder { color: var(--ink-3); }
+.ai-send {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: grid; place-items: center;
+  background: var(--gold);
+  color: #17130A;
+  flex-shrink: 0;
+  transition: filter .2s;
+}
+.ai-send svg { width: 14px; height: 14px; fill: #17130A; }
+.ai-send:hover { filter: brightness(1.07); }
+.ai-send[disabled] { opacity: .4; }
+
+.ai-foot {
+  font-size: 9.5px;
+  text-align: center;
+  padding: 8px 12px 10px;
+  letter-spacing: .02em;
+}
+
+/* ── 设置抽屉 ─────────────────────────────────────── */
+.sheet-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(0, 0, 0, .45);
+  backdrop-filter: blur(3px);
+  animation: fade .2s;
+}
+.sheet-mask.is-hidden { display: none; }
+@keyframes fade { from { opacity: 0; } }
+
+.sheet {
+  position: fixed;
+  z-index: 90;
+  right: 0; top: 0; bottom: 0;
+  width: min(400px, 100vw);
+  background: var(--bg-elev);
+  border-left: 1px solid var(--line-2);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn .3s var(--ease);
+  box-shadow: -20px 0 60px -30px rgba(0,0,0,.6);
+}
+.sheet.is-hidden { display: none; }
+@keyframes slideIn { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.sheet-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.sheet-head h3 { font-family: var(--font-display); font-size: 18px; margin-top: 4px; }
+.sheet-body { padding: 18px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label { font-size: 10.5px; letter-spacing: .08em; color: var(--ink-3); text-transform: uppercase; }
+.field input[type="text"], .field input[type="password"], .field input:not([type]) {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 9px 11px;
+  font-size: 12.5px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color .2s;
+}
+.field input:focus { border-color: var(--gold); }
+.field input[type="range"] { accent-color: var(--gold); }
+
+.preset-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.preset {
+  font-size: 11px;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 11px;
+  transition: all .18s;
+}
+.preset:hover { border-color: var(--gold); color: var(--gold); }
+.preset.is-active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+.sheet-actions { display: flex; gap: 8px; margin-top: 4px; }
+.sheet-actions .btn { flex: 1; justify-content: center; }
+
+/* ── Toast ────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translate(-50%, 14px);
+  z-index: 100;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 12px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .28s var(--ease);
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ── 滚动条 ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 9px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-3); background-clip: content-box; }
+
+/* ── 响应式 ───────────────────────────────────────── */
+/* 三语（中 / 俄 / 英）在任何宽度下都保留，只调列宽与字号 */
+@media (max-width: 1180px) {
+  .grid { grid-template-columns: minmax(0, 1fr) 330px; }
+  .col-cat { width: 92px; }
+  .col-en { width: 23%; }
+  table.terms { font-size: 12.5px; }
+  table.terms th, table.terms td { padding-left: 9px; padding-right: 9px; }
+  .cell-ru { font-size: 11.8px; }
+  .cell-en { font-size: 11.5px; }
+}
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; align-items: start; }
+  .hero-metrics { grid-template-columns: repeat(4, 1fr); }
+  .grid { grid-template-columns: 1fr; }
+  .detail-panel { position: static; max-height: none; }
+  .audit-grid { grid-template-columns: 1fr; }
+  .nav { margin-left: 0; }
+}
+
+@media (max-width: 760px) {
+  .topbar { height: auto; padding: 10px 14px; flex-wrap: wrap; gap: 8px 14px; }
+  .nav { order: 3; width: 100%; overflow-x: auto; }
+  .nav-btn { padding: 6px 10px; font-size: 12px; }
+  .nav-btn.is-active::after { bottom: -6px; left: 10px; right: 10px; }
+  .brand-text i { display: none; }
+  .counter { display: none; }
+  .hero-metrics { grid-template-columns: 1fr 1fr; }
+  .metric b { font-size: 23px; }
+  .hero h1 br { display: none; }
+  main { padding: 16px 14px 40px; }
+
+  /* 窄屏：类目只留色点，把宽度让给三语 */
+  .col-cat { width: 26px; }
+  .cat-cell { justify-content: center; }
+  .cat-cell span.tt { display: none; }
+  table.terms { font-size: 11.5px; }
+  table.terms th { padding: 7px 5px; letter-spacing: .12em; }
+  table.terms td { padding: 0 5px; }
+  .row > td { height: auto; padding-top: 10px; padding-bottom: 10px; }
+  .col-en { width: 27%; }
+  .cell-cn { font-size: 12px; }
+  .cell-ru { font-size: 10.5px; overflow-wrap: anywhere; }
+  .cell-en { font-size: 10px; overflow-wrap: anywhere; }
+
+  .ai-panel { right: 8px; bottom: 8px; width: calc(100vw - 16px); max-height: calc(100vh - 24px); }
+  .ai-fab { right: 14px; bottom: 14px; }
+  .audit-cost { gap: 10px; }
+  .console-bar select { flex: 1; }
+  .site-foot { gap: 10px; font-size: 9.5px; }
+}
+
+/* 极窄屏：表格转卡片行，三语各自完整展示，不做横向滚动 */
+@media (max-width: 600px) {
+  table.terms thead { display: none; }
+  table.terms, table.terms tbody { display: block; width: 100%; }
+  table.terms tr.row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 44%);
+    gap: 3px 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  table.terms tr.row > td {
+    display: block;
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: 0;
+  }
+  table.terms tr.row > td:first-child { display: none; }
+  table.terms tr.row > td:nth-child(2) { grid-column: 1 / -1; }
+  table.terms tr.row > td:nth-child(3) { grid-column: 1; }
+  table.terms tr.row > td:nth-child(4) { grid-column: 2; text-align: right; }
+
+  .inline-cat { display: inline-block; }
+  .cell-cn { font-size: 13px; }
+  .cell-ru { font-size: 11.5px; }
+  .cell-en { font-size: 10.5px; color: var(--ink-3); overflow-wrap: anywhere; }
+  .row.is-active { box-shadow: inset 2px 0 0 var(--gold); }
+  .row:hover, .row.is-active { background: var(--panel-2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+
+<header class="topbar">
+  <a class="brand" href="#/terms" aria-label="返回术语库">
+    <span class="mark" aria-hidden="true"></span>
+    <span class="brand-text">
+      <b>中俄物流术语库</b>
+      <i>ЛОГИСТИКА КНР — РФ</i>
+    </span>
+  </a>
+
+  <nav class="nav" aria-label="主导航">
+    <button class="nav-btn is-active" data-view="terms">术语库</button>
+    <button class="nav-btn" data-view="audit">单证校验</button>
+    <button class="nav-btn" data-view="api">API 接入</button>
+    <button class="nav-btn" data-view="about">关于</button>
+  </nav>
+
+  <div class="top-actions">
+    <span class="counter" id="counter" title="已建档词条">—</span>
+    <button class="icon-btn" id="themeBtn" title="切换明暗" aria-label="切换主题">◐</button>
+    <button class="btn btn-gold" id="aiBtn">
+      <span class="pulse" aria-hidden="true"></span>AI 术语助手
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ═══════════════ 术语库 ═══════════════ -->
+  <section class="view is-active" id="view-terms">
+    <div class="hero">
+      <div class="hero-left">
+        <p class="eyebrow">STATION 03 · 自主实践 · <span id="edition">2026 秋</span></p>
+        <h1>同一票货，三个名字。<br><em>译准，才不赔钱。</em></h1>
+        <p class="lede">
+          一票货过口岸：国内叫「换装」，俄方单证写「перегрузка」，英文合同写「transshipment」。
+          译法不统一，单证就会被退；退一次、重报一次，就是一列车的滞港费。
+          这个库把「一个词」提前练了一遍。
+        </p>
+        <div class="gauge-chips">
+          <span class="tag">宽轨 1520 mm</span>
+          <span class="tag">准轨 1435 mm</span>
+          <span class="tag tag-gold">按线路补充 · <span id="edition2">2026 秋</span></span>
+        </div>
+      </div>
+      <div class="hero-metrics">
+        <div class="metric">
+          <b id="mTotal">—</b>
+          <span>已建档 / 目标 <span id="mTarget">300</span> 条</span>
+        </div>
+        <div class="metric">
+          <b id="mRisk">—</b>
+          <span>高风险易错词</span>
+        </div>
+        <div class="metric">
+          <b id="mCat">—</b>
+          <span>类目 · 三语对照</span>
+        </div>
+        <div class="metric metric-live">
+          <b id="mCover">—</b>
+          <span>覆盖率 · 核心四类</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchbar" role="search">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false"
+             placeholder="搜索中文 / русский / English，或直接粘贴一句单证原文…">
+      <kbd class="hint">Ctrl K</kbd>
+    </div>
+
+    <div class="filters" id="filters" role="tablist" aria-label="分类筛选"></div>
+
+    <div class="grid">
+      <div class="panel list-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <span id="resultLabel">全部词条</span>
+            <small id="resultCount">—</small>
+          </div>
+          <div class="seg" id="riskSeg">
+            <button class="seg-btn is-active" data-risk="all">全部</button>
+            <button class="seg-btn" data-risk="high">仅高风险</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="terms">
+            <thead>
+              <tr>
+                <th class="col-cat">类目</th>
+                <th>中文</th>
+                <th>РУССКИЙ</th>
+                <th class="col-en">ENGLISH</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+
+        <div class="pager">
+          <span id="pagerInfo">—</span>
+          <button class="btn btn-ghost btn-sm" id="moreBtn">显示更多</button>
+        </div>
+      </div>
+
+      <aside class="panel detail-panel" id="detail" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <!-- ═══════════════ 单证校验 ═══════════════ -->
+  <section class="view" id="view-audit">
+    <div class="section-head">
+      <p class="eyebrow">AUDIT · 译法一致性</p>
+      <h2>粘一张单证，先看它会退在哪。</h2>
+      <p class="lede">检测三类问题：<b>同一术语出现多种译法</b>、<b>使用了非推荐译法</b>、<b>高风险词无对应译文</b>。全部在本地完成，文本不出浏览器。</p>
+    </div>
+
+    <div class="audit-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><span>待校验文本</span><small id="auditChars">0 字符</small></div>
+          <button class="btn btn-ghost btn-sm" id="auditSample">载入示例</button>
+        </div>
+        <textarea id="auditText" spellcheck="false"
+          placeholder="粘贴合同条款、运单说明、报关备注、或给俄方的邮件正文…&#10;&#10;支持中文 / русский / English 混排。"></textarea>
+        <div class="audit-tools">
+          <button class="btn btn-gold" id="auditRun">开始校验</button>
+          <button class="btn btn-ghost" id="auditClear">清空</button>
+          <button class="btn btn-ghost" id="auditAsk">让 AI 解读结果</button>
+        </div>
+        <div class="audit-cost">
+          <label>单车日滞留成本 ¥<input id="costDay" type="number" min="0" step="100" value="1200"></label>
+          <label>重报周期 <input id="redoDays" type="number" min="1" max="30" step="1" value="2"> 天</label>
+        </div>
+      </div>
+
+      <div class="panel audit-result" id="auditResult">
+        <div class="empty-state">
+          <span class="empty-mark">⌁</span>
+          <p>还没有校验结果</p>
+          <small>点「开始校验」，或者先载入一份示例单证看看长什么样。</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ API ═══════════════ -->
+  <section class="view" id="view-api">
+    <div class="section-head">
+      <p class="eyebrow">OPEN API · 外部接入</p>
+      <h2>把术语库接进你自己的工具。</h2>
+      <p class="lede">三种接法：<b>静态 JSON 端点</b>（零后端、走 CDN）、<b>JS SDK</b>（一行嵌入检索面板）、<b>iframe 嵌入</b>（整站挂到内网）。</p>
+    </div>
+
+    <div class="api-grid">
+      <div class="panel api-card">
+        <h3>1 · 静态 JSON 端点</h3>
+        <p>部署在 GitHub Pages 后即可直接 GET，带 CDN 缓存，适合脚本、表格、内部系统拉取。</p>
+        <div class="code-line">
+          <code id="epAll">/api/terms.json</code>
+          <button class="copy-btn" data-copy-target="epAll">复制</button>
+        </div>
+        <div class="code-line">
+          <code id="epIndex">/api/index.json</code>
+          <button class="copy-btn" data-copy-target="epIndex">复制</button>
+        </div>
+        <div class="code-line">
+          <code id="epSearch">/api/search-index.json</code>
+          <button class="copy-btn" data-copy-target="epSearch">复制</button>
+        </div>
+      </div>
+
+      <div class="panel api-card">
+        <h3>2 · JS SDK</h3>
+        <p>引入一个文件，得到 <code class="inline">ZRTerms.search()</code> 与可挂载的检索面板。</p>
+        <pre class="code-block" id="sdkSnippet">&lt;script src="sdk/zhru-terms.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  ZRTerms.search("换装").then(list =&gt; console.table(list));
+  ZRTerms.mount("#my-box", { query: "слот" });
+&lt;/script&gt;</pre>
+        <button class="copy-btn wide" data-copy-target="sdkSnippet">复制代码</button>
+      </div>
+
+      <div class="panel api-card">
+        <h3>3 · iframe 嵌入</h3>
+        <p>不需要改任何代码，直接把整个应用挂进内网页面或知识库。</p>
+        <pre class="code-block" id="iframeSnippet">&lt;iframe src="https://OWNER.github.io/REPO/#/terms"
+        style="width:100%;height:760px;border:0"
+        title="中俄物流术语库"&gt;&lt;/iframe&gt;</pre>
+        <button class="copy-btn wide" data-copy-target="iframeSnippet">复制代码</button>
+      </div>
+    </div>
+
+    <div class="panel console-panel">
+      <div class="panel-head">
+        <div class="panel-title"><span>在线调试台</span><small>真实运行在本页数据上，响应结构即线上结构</small></div>
+        <span class="console-badge">LOCAL SIMULATION</span>
+      </div>
+      <div class="console-bar">
+        <span class="console-method">GET</span>
+        <select id="apiEndpoint">
+          <option value="terms">/api/terms.json</option>
+          <option value="index">/api/index.json</option>
+          <option value="search">/api/search-index.json</option>
+          <option value="term">/api/terms.json?q={q}&amp;cat={cat}</option>
+          <option value="term-id">/api/terms.json/{id}</option>
+        </select>
+        <input id="apiParam" placeholder="q=换装  或  id=t001" spellcheck="false">
+        <button class="btn btn-gold btn-sm" id="apiRun">发送</button>
+      </div>
+      <pre class="code-block json" id="apiOut">// 点「发送」查看响应</pre>
+      <div class="console-foot">
+        <button class="btn btn-ghost btn-sm" id="apiCurlCopy">复制等价 curl</button>
+        <span class="dim">响应含 CORS 头（GitHub Pages 默认开启），浏览器可直接跨域调用。</span>
+      </div>
+    </div>
+
+    <div class="panel api-doc">
+      <h3>数据契约</h3>
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td>string</td><td>稳定主键，如 <code>t001</code>，永不复用</td></tr>
+            <tr><td><code>cat</code></td><td>enum</td><td>reload / customs / space / docs / charge / risk</td></tr>
+            <tr><td><code>cn</code> <code>ru</code> <code>en</code></td><td>string</td><td>中文 / русский / English 推荐译法</td></tr>
+            <tr><td><code>alt</code></td><td>string[]</td><td>行业变体译法，可用于译法一致性校验</td></tr>
+            <tr><td><code>note</code></td><td>string?</td><td>易错点 / 用法提示</td></tr>
+            <tr><td><code>ex</code></td><td>{cn,ru}?</td><td>场景例句（中俄对照）</td></tr>
+            <tr><td><code>risk</code></td><td>"high"?</td><td>标记高风险易错词</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dim">完整文档见仓库 <code>docs/API.md</code>。数据许可 CC BY 4.0，商用请保留来源。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ 关于 ═══════════════ -->
+  <section class="view" id="view-about">
+    <div class="section-head">
+      <p class="eyebrow">ABOUT · 项目说明</p>
+      <h2>一个词，一列车，一笔钱。</h2>
+      <p class="lede">这个工具出发点很小：关务协调岗每天要为「一个词」赔钱，那就先把这件事练一遍。</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="panel">
+        <h3>为什么做这个</h3>
+        <p>中俄线单证的痛不在翻译水平，而在<b>口径</b>。同一个动作，中方说换装、俄方写 перегрузка、英文合同写 transshipment；同一个费，合同写 demurrage、俄铁只认 простой。译法一旦分叉，报关单与运单就对不上，退单、重报、滞期，一条链全被拖住。</p>
+        <p>所以这里不追求「大而全的词典」，而是把<b>会直接造成退单的 139 个词</b>先钉死：一条推荐译法、若干变体译法、一句易错提示、一个场景例句。</p>
+      </div>
+      <div class="panel">
+        <h3>术语口径</h3>
+        <ul class="plain-list">
+          <li><b>推荐译法</b>取俄方单证与法规文本的惯用写法，不取直译。</li>
+          <li><b>变体译法</b>保留行业口语与旧称，用于识别"同一术语多种译法"。</li>
+          <li><b>高风险标记</b>指混淆后直接导致退单、滞期或税费争议的词。</li>
+          <li>例句为场景化示例，不引用真实单证数据。</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>技术形态</h3>
+        <ul class="plain-list">
+          <li>纯静态 · 零构建 · 零后端，双击 <code>index.html</code> 即用。</li>
+          <li>AI 助手接任意 OpenAI 兼容接口（DeepSeek / 通义 / OpenAI / 本地 Ollama），密钥只存本地。</li>
+          <li>无密钥时自动降级为「离线检索脑」，仍可回答术语对比类问题。</li>
+          <li>单证校验全程本地正则匹配，文本不上传。</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>许可与引用</h3>
+        <p>代码 MIT；术语数据 CC BY 4.0。转载、二次分发请保留仓库地址与版本号：</p>
+        <pre class="code-block">中俄双语物流术语库 v<span id="aboutVer">1.0.0</span>
+https://github.com/OWNER/REPO</pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <span>站台 03 · 中俄物流术语库</span>
+  <span class="dim">译准，才不赔钱</span>
+  <span class="dim" id="footVer">v1.0.0 · 2026 秋</span>
+</footer>
+
+<!-- ═══════════════ AI 助手 ═══════════════ -->
+<button class="ai-fab" id="aiFab" aria-label="打开 AI 术语助手">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v10H12l-4.5 3.5v-3.5H4z"/></svg>
+  <span>AI</span>
+</button>
+
+<aside class="ai-panel is-hidden" id="aiPanel" aria-label="AI 术语助手">
+  <header class="ai-head">
+    <div class="ai-id">
+      <span class="ai-dot" id="aiDot"></span>
+      <div>
+        <b>术语助手</b>
+        <small id="aiStatus">离线检索模式</small>
+      </div>
+    </div>
+    <div class="ai-head-actions">
+      <button class="icon-btn" id="aiSettingsBtn" title="API 设置">⚙</button>
+      <button class="icon-btn" id="aiClose" title="收起">✕</button>
+    </div>
+  </header>
+
+  <div class="ai-body" id="aiBody"></div>
+
+  <div class="ai-quick" id="aiQuick">
+    <button data-q="换装和舱位有什么区别？">换装 vs 舱位</button>
+    <button data-q="宽轨和准轨在合同里该怎么写？">宽轨 / 准轨写法</button>
+    <button data-q="给我一份换装条款模板">换装条款模板</button>
+    <button data-q="滞期费和滞留费的区别？">滞期 vs 滞留</button>
+  </div>
+
+  <form class="ai-input" id="aiForm">
+    <textarea id="aiText" rows="1" placeholder="问点什么，或粘贴一段俄文单证…"></textarea>
+    <button type="submit" class="ai-send" id="aiSend" aria-label="发送">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l16-8-6 8 6 8z"/></svg>
+    </button>
+  </form>
+  <p class="ai-foot dim">内容由模型生成，单证以官方口径为准。</p>
+</aside>
+
+<!-- ═══════════════ 设置抽屉 ═══════════════ -->
+<div class="sheet-mask is-hidden" id="sheetMask"></div>
+<section class="sheet is-hidden" id="sheet" aria-label="API 设置">
+  <header class="sheet-head">
+    <div>
+      <p class="eyebrow">SETTINGS</p>
+      <h3>模型接入</h3>
+    </div>
+    <button class="icon-btn" id="sheetClose">✕</button>
+  </header>
+
+  <div class="sheet-body">
+    <div class="field">
+      <label>服务商</label>
+      <div class="preset-row" id="presetRow">
+        <button class="preset" data-preset="deepseek">DeepSeek</button>
+        <button class="preset" data-preset="qwen">通义千问</button>
+        <button class="preset" data-preset="openai">OpenAI</button>
+        <button class="preset" data-preset="moonshot">Moonshot</button>
+        <button class="preset" data-preset="ollama">本地 Ollama</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="setBase">Base URL</label>
+      <input id="setBase" spellcheck="false" placeholder="https://api.deepseek.com/v1">
+    </div>
+    <div class="field">
+      <label for="setModel">模型</label>
+      <input id="setModel" spellcheck="false" placeholder="deepseek-chat">
+    </div>
+    <div class="field">
+      <label for="setKey">API Key <small class="dim">仅存本机 localStorage，不上传</small></label>
+      <input id="setKey" type="password" spellcheck="false" placeholder="sk-...">
+    </div>
+    <div class="field">
+      <label for="setTemp">温度 <span class="dim" id="tempVal">0.3</span></label>
+      <input id="setTemp" type="range" min="0" max="1" step="0.1" value="0.3">
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-gold" id="setSave">保存并测试</button>
+      <button class="btn btn-ghost" id="setClear">清除密钥</button>
+    </div>
+    <p class="dim tiny" id="setHint">未配置密钥时，助手使用本地术语检索作答，不联网。</p>
+  </div>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/**
+ * 中俄双语物流术语库 — 数据源（唯一真源）
+ * ------------------------------------------------------------
+ * 外部消费者请使用 api/terms.json（由 scripts/build-api.mjs 生成）。
+ * 字段说明见 docs/API.md。
+ */
+window.__ZR_DATA__ = {
+  version: "1.0.0",
+  updated: "2026-11-07",
+  edition: "2026 秋",
+  target: 300,
+  categories: [
+    { id: "reload",  cn: "换装", ru: "Перегрузка",   desc: "宽轨 / 准轨交接、掏箱装箱、车板编组" },
+    { id: "customs", cn: "关务", ru: "Таможня",       desc: "申报、查验、放行、税费与在途监管" },
+    { id: "space",   cn: "舱位", ru: "Слоты и парк",  desc: "订舱、箱管、甩柜与堆存" },
+    { id: "docs",    cn: "单证", ru: "Документы",     desc: "运单、发票、箱单、变更与签署" },
+    { id: "charge",  cn: "费用", ru: "Платежи",       desc: "运费、附加费、滞留与结算" },
+    { id: "risk",    cn: "异常", ru: "Риски",         desc: "退单、货损、索赔与不可抗力" }
+  ],
+  terms: [
+    /* ── 换装 ───────────────────────────────────────────── */
+    { id: "t001", cat: "reload", risk: "high", cn: "换装", ru: "перегрузка", en: "transshipment",
+      alt: ["перегрузка груза", "перевалка"],
+      note: "俄方单证以 перегрузка 为准；перевалка 多指港口倒装，混用最容易被退单。",
+      ex: { cn: "班列在白俄罗斯布列斯特站完成换装。", ru: "Поезд проходит перегрузку на станции Брест в Беларуси." } },
+    { id: "t002", cat: "reload", cn: "换装站", ru: "станция перегрузки", en: "transshipment station",
+      alt: ["пункт перегрузки"],
+      note: "报关单「换装地点」一栏填此，须与运单完全一致。",
+      ex: { cn: "报关单上的换装站必须与运单一致。", ru: "Станция перегрузки в декларации должна совпадать с накладной." } },
+    { id: "t003", cat: "reload", cn: "换装作业", ru: "перегрузочные работы", en: "transshipment operations",
+      note: "作业单标题常用复数形式，单数 перегрузочная работа 在俄方文件里较少见。" },
+    { id: "t004", cat: "reload", cn: "换装时间", ru: "время перегрузки", en: "transshipment time",
+      note: "合同时效条款里与「停留时间 простой」分开写，否则算不清滞期。" },
+    { id: "t005", cat: "reload", cn: "换装费", ru: "плата за перегрузку", en: "transshipment charge",
+      note: "报价单里常拆成「换装作业费 + 吊装费」两项，勿合并报一个 total。" },
+    { id: "t006", cat: "reload", cn: "换装能力", ru: "пропускная способность перегрузки", en: "transshipment capacity",
+      note: "пропускная способность 是口岸通行能力的标准说法，别直译成 возможность。" },
+    { id: "t007", cat: "reload", risk: "high", cn: "二次换装", ru: "повторная перегрузка", en: "re-transshipment",
+      note: "中线/口岸拥堵时的衍生动作，费用与责任须在补充协议里单列。" },
+    { id: "t008", cat: "reload", risk: "high", cn: "宽轨", ru: "широкая колея", en: "broad gauge",
+      alt: ["колея 1520 мм"],
+      note: "1520 mm；俄、哈、白通用。写成 1435 是性质错误，不是笔误。",
+      ex: { cn: "宽轨区段使用 1520 mm 轨距。", ru: "На участке широкой колеи используется колея 1520 мм." } },
+    { id: "t009", cat: "reload", risk: "high", cn: "准轨", ru: "стандартная колея", en: "standard gauge",
+      alt: ["европейская колея", "колея 1435 мм"],
+      note: "1435 mm。中欧线两端轨距不同，是换装存在的物理原因。" },
+    { id: "t010", cat: "reload", cn: "轮对", ru: "колёсная пара", en: "wheelset",
+      note: "复数 колёсные пары。技术文件里常与 тележка（转向架）连用。" },
+    { id: "t011", cat: "reload", cn: "换轮", ru: "смена колёсных пар", en: "wheelset change",
+      note: "与换装不是一回事：换轮不掏箱，时效更快，费用口径不同。" },
+    { id: "t012", cat: "reload", cn: "换装线", ru: "перегрузочный путь", en: "transshipment track",
+      note: "站场作业文件里出现的股道概念，别与 подъездной путь（专用线）混用。" },
+    { id: "t013", cat: "reload", cn: "吊装", ru: "перегрузка краном", en: "crane handling",
+      note: "按吨计费时写作 перегрузка краном, за тонну。" },
+    { id: "t014", cat: "reload", cn: "掏箱", ru: "выгрузка из контейнера", en: "devanning",
+      alt: ["растарка"],
+      note: "растарка 是行业口语，正式单证用 выгрузка из контейнера。" },
+    { id: "t015", cat: "reload", cn: "装箱", ru: "загрузка контейнера", en: "vanning",
+      alt: ["затарка"],
+      note: "装箱单第 1 栏即用该词，缩写成 cont. loading 会被要求改单。" },
+    { id: "t016", cat: "reload", cn: "二次封箱", ru: "повторное пломбирование", en: "resealing",
+      note: "查验或掏箱后必做动作，关封号须回填到运单附页。" },
+    { id: "t017", cat: "reload", cn: "车板", ru: "вагон", en: "railcar",
+      note: "中文口语「车皮」= вагон，正式文本写「车辆」更妥。" },
+    { id: "t018", cat: "reload", cn: "敞车", ru: "полувагон", en: "gondola car",
+      note: "对应俄铁车型号 12-132 一类，散货首选。" },
+    { id: "t019", cat: "reload", cn: "平车", ru: "платформа", en: "flatcar",
+      note: "集装箱平车写作 платформа для контейнеров。" },
+    { id: "t020", cat: "reload", cn: "篷车", ru: "крытый вагон", en: "boxcar",
+      note: "怕湿货常用；与 крытый склад（库房）不是一回事。" },
+    { id: "t021", cat: "reload", cn: "罐车", ru: "цистерна", en: "tank car" },
+    { id: "t022", cat: "reload", risk: "high", cn: "车皮计划", ru: "заявка на перевозку", en: "wagon plan",
+      alt: ["ГУ-12"],
+      note: "俄铁内部单据号 ГУ-12，中俄合同常直接写 ГУ-12，比意译更清楚。" },
+    { id: "t023", cat: "reload", cn: "编组", ru: "формирование поезда", en: "marshalling",
+      note: "编组站 сортировочная станция；两个词别写反。" },
+    { id: "t024", cat: "reload", cn: "交接", ru: "передача груза", en: "handover",
+      alt: ["пересдача"],
+      note: "口岸交接双方是铁路与铁路，不是发货人与承运人。" },
+    { id: "t025", cat: "reload", risk: "high", cn: "交接单", ru: "акт приёма-передачи", en: "handover certificate",
+      note: "连字符不能省；单独写 акт приёма 在俄方看来是另一种单证。",
+      ex: { cn: "换装完成后双方签署交接单。", ru: "После перегрузки стороны подписывают акт приёма-передачи." } },
+    { id: "t026", cat: "reload", risk: "high", cn: "商务记录", ru: "коммерческий акт", en: "commercial act",
+      note: "俄铁出险必出此单，是索赔的法定前提，没有它索赔基本无望。",
+      ex: { cn: "货损必须当场制作商务记录。", ru: "При повреждении груза коммерческий акт составляется на месте." } },
+    { id: "t027", cat: "reload", cn: "口岸", ru: "пограничный переход", en: "border crossing",
+      alt: ["пункт пропуска"],
+      note: "пограничный переход 指通道，пункт пропуска 指查验点，公文中常并列。" },
+    { id: "t028", cat: "reload", cn: "边境站", ru: "пограничная станция", en: "border station" },
+    { id: "t029", cat: "reload", cn: "中欧班列", ru: "Китайско-европейский железнодорожный контейнерный поезд", en: "China-Europe Railway Express",
+      alt: ["КЭП"],
+      note: "正式文本用全称，邮件与报价单用缩写 КЭП 即可。" },
+    { id: "t030", cat: "reload", cn: "集拼", ru: "консолидация грузов", en: "consolidation",
+      note: "反向动作是 расконсолидация（拆拼），两者别对调。" },
+    { id: "t031", cat: "reload", cn: "调车", ru: "маневровые работы", en: "shunting" },
+    { id: "t032", cat: "reload", cn: "装卸线", ru: "погрузочно-разгрузочный путь", en: "loading track" },
+
+    /* ── 关务 ───────────────────────────────────────────── */
+    { id: "t033", cat: "customs", risk: "high", cn: "报关", ru: "таможенное оформление", en: "customs declaration",
+      alt: ["декларирование"],
+      note: "俄方电子系统里叫 декларирование，纸质文件叫 оформление；同一份文件里只用一种。" },
+    { id: "t034", cat: "customs", risk: "high", cn: "报关单", ru: "таможенная декларация", en: "customs declaration form",
+      alt: ["ДТ", "декларация на товары"],
+      note: "俄海关电子系统里通称 ДТ，专业沟通写 ДТ 比写全称更不易歧义。",
+      ex: { cn: "报关单填错一位编码，整票退单。", ru: "Одна ошибка в коде в декларации — и вся декларация возвращается." } },
+    { id: "t035", cat: "customs", cn: "报关行", ru: "таможенный представитель", en: "customs broker",
+      alt: ["таможенный брокер"],
+      note: "брокер 是 2010 年以前的旧称，现行法规用 представитель。" },
+    { id: "t036", cat: "customs", cn: "报关员", ru: "декларант", en: "declarant" },
+    { id: "t037", cat: "customs", cn: "清关", ru: "таможенная очистка", en: "customs clearance",
+      note: "口语 очистка，法规文本写 выпуск товаров（放行）。",
+      ex: { cn: "清关资料不齐，货物压仓。", ru: "Таможенная очистка задерживается из-за неполных документов." } },
+    { id: "t038", cat: "customs", risk: "high", cn: "查验", ru: "таможенный досмотр", en: "customs inspection",
+      alt: ["осмотр"],
+      note: "досмотр = 开箱查验；осмотр = 外形查看。混用会被要求补件重排。",
+      ex: { cn: "海关查验后需要重新封箱。", ru: "После таможенного досмотра требуется повторное пломбирование." } },
+    { id: "t039", cat: "customs", cn: "放行", ru: "выпуск товаров", en: "release of goods",
+      alt: ["разрешение на выпуск"] },
+    { id: "t040", cat: "customs", risk: "high", cn: "关封", ru: "таможенная пломба", en: "customs seal",
+      alt: ["ЗПУ"],
+      note: "ЗПУ = 封锁装置，电子关封写作 электронное ЗПУ。" },
+    { id: "t041", cat: "customs", cn: "关税", ru: "таможенная пошлина", en: "customs duty" },
+    { id: "t042", cat: "customs", cn: "增值税", ru: "НДС", en: "VAT",
+      note: "俄境内 20%，出口可零税率，需在合同里写清含税/不含税。" },
+    { id: "t043", cat: "customs", cn: "消费税", ru: "акциз", en: "excise duty" },
+    { id: "t044", cat: "customs", cn: "完税价格", ru: "таможенная стоимость", en: "customs value",
+      note: "不是 цена товара；低报会被稽查，风险等级高。" },
+    { id: "t045", cat: "customs", risk: "high", cn: "商品编码", ru: "код ТН ВЭД", en: "HS code",
+      alt: ["код ТН ВЭД ЕАЭС"],
+      note: "欧亚经济联盟用 10 位 ТН ВЭД ЕАЭС，写 6 位会被驳回。",
+      ex: { cn: "商品编码用 10 位，不是 6 位。", ru: "Код ТН ВЭД указывается из 10 знаков, а не из 6." } },
+    { id: "t046", cat: "customs", cn: "原产地证", ru: "сертификат о происхождении товара", en: "certificate of origin",
+      alt: ["СТ-1"],
+      note: "中国出口享惠用 СТ-1，普通证不享关税优惠。" },
+    { id: "t047", cat: "customs", cn: "转关", ru: "таможенный транзит", en: "customs transit" },
+    { id: "t048", cat: "customs", cn: "过境", ru: "транзит", en: "transit" },
+    { id: "t049", cat: "customs", cn: "保税仓", ru: "таможенный склад", en: "bonded warehouse" },
+    { id: "t050", cat: "customs", cn: "预申报", ru: "предварительное декларирование", en: "pre-declaration",
+      note: "班列到站前 4 小时可预申报，能省一整天。" },
+    { id: "t051", cat: "customs", cn: "电子报关", ru: "электронное декларирование", en: "electronic declaration" },
+    { id: "t052", cat: "customs", cn: "单一窗口", ru: "единое окно", en: "single window" },
+    { id: "t053", cat: "customs", cn: "保证金", ru: "обеспечение уплаты таможенных платежей", en: "customs security",
+      alt: ["депозит"],
+      note: "临时进口/暂准进口必缴，合同里须明确由谁承担。",
+      ex: { cn: "临时进口需缴纳保证金。", ru: "При временном ввозе требуется обеспечение уплаты таможенных платежей." } },
+    { id: "t054", cat: "customs", cn: "海关监管", ru: "таможенный контроль", en: "customs control" },
+    { id: "t055", cat: "customs", cn: "海关关区", ru: "таможенный пост", en: "customs office",
+      alt: ["таможня"],
+      note: "таможня 是海关（机构），таможенный пост 是口岸海关点，报关单填后者。" },
+    { id: "t056", cat: "customs", cn: "报关委托书", ru: "доверенность на таможенное оформление", en: "power of attorney for customs" },
+    { id: "t057", cat: "customs", cn: "随附单证", ru: "сопроводительные документы", en: "accompanying documents" },
+    { id: "t058", cat: "customs", cn: "卫生检疫", ru: "санитарно-карантинный контроль", en: "sanitary quarantine" },
+    { id: "t059", cat: "customs", cn: "动植物检疫", ru: "фитосанитарный контроль", en: "phytosanitary control",
+      note: "植物类写 фитосанитарный，动物类写 ветеринарный，别一概而论。" },
+    { id: "t060", cat: "customs", cn: "退税", ru: "возврат НДС", en: "VAT refund" },
+    { id: "t061", cat: "customs", cn: "稽查", ru: "таможенная проверка", en: "customs audit" },
+    { id: "t062", cat: "customs", cn: "归类", ru: "классификация товаров", en: "tariff classification" },
+    { id: "t063", cat: "customs", cn: "报关期限", ru: "срок декларирования", en: "declaration deadline" },
+
+    /* ── 舱位 ───────────────────────────────────────────── */
+    { id: "t064", cat: "space", risk: "high", cn: "舱位", ru: "слот", en: "slot",
+      alt: ["место на поезд"],
+      note: "铁路、海运订舱都说 слот。俄方确认邮件一句「слот подтверждён」就是全部确认。",
+      ex: { cn: "本周舱位已确认，周五截单。", ru: "Слот на эту неделю подтверждён, отсечка в пятницу." } },
+    { id: "t065", cat: "space", cn: "订舱", ru: "бронирование места", en: "booking",
+      alt: ["букинг"] },
+    { id: "t066", cat: "space", cn: "舱位确认", ru: "подтверждение бронирования", en: "booking confirmation" },
+    { id: "t067", cat: "space", risk: "high", cn: "甩柜", ru: "перенос брони", en: "rolled cargo",
+      alt: ["роллинг", "снятие с рейса"],
+      note: "口语 сняли с рейса，正式函件写 перенос бронирования，别在索赔函里用口语。",
+      ex: { cn: "舱位被甩，只能等下一班。", ru: "Бронь перенесли, ждём следующий поезд." } },
+    { id: "t068", cat: "space", cn: "亏舱", ru: "недогруз", en: "underloading",
+      alt: ["broken space"] },
+    { id: "t069", cat: "space", cn: "满载", ru: "полная загрузка", en: "full load" },
+    { id: "t070", cat: "space", cn: "空箱", ru: "порожний контейнер", en: "empty container",
+      alt: ["порожняк"] },
+    { id: "t071", cat: "space", cn: "重箱", ru: "гружёный контейнер", en: "loaded container" },
+    { id: "t072", cat: "space", cn: "整箱", ru: "полная загрузка контейнера", en: "FCL" },
+    { id: "t073", cat: "space", cn: "拼箱", ru: "сборный груз", en: "LCL" },
+    { id: "t074", cat: "space", cn: "拆箱", ru: "расконсолидация", en: "deconsolidation" },
+    { id: "t075", cat: "space", cn: "箱号", ru: "номер контейнера", en: "container number",
+      note: "4 位字母 + 7 位数字，校验位错一位就查不到轨迹。" },
+    { id: "t076", cat: "space", cn: "箱型", ru: "тип контейнера", en: "container type" },
+    { id: "t077", cat: "space", cn: "40 尺高柜", ru: "40-футовый контейнер повышенной вместимости", en: "40HC" },
+    { id: "t078", cat: "space", cn: "箱况", ru: "состояние контейнера", en: "container condition" },
+    { id: "t079", cat: "space", cn: "转场", ru: "перестановка контейнера", en: "container repositioning" },
+    { id: "t080", cat: "space", risk: "high", cn: "堆存", ru: "хранение", en: "storage",
+      note: "хранение 泛指仓储，堆场堆存费写作 плата за хранение на терминале。" },
+    { id: "t081", cat: "space", cn: "提箱", ru: "вывоз контейнера", en: "container pickup" },
+    { id: "t082", cat: "space", cn: "还箱", ru: "возврат контейнера", en: "container return" },
+    { id: "t083", cat: "space", cn: "箱管", ru: "управление контейнерным парком", en: "container management" },
+    { id: "t084", cat: "space", cn: "舱位余量", ru: "наличие мест", en: "slot availability" },
+
+    /* ── 单证 ───────────────────────────────────────────── */
+    { id: "t085", cat: "docs", risk: "high", cn: "运单", ru: "железнодорожная накладная", en: "railway waybill",
+      alt: ["накладная СМГС", "ЦИМ"],
+      note: "中俄线走 СМГС，欧洲段走 CIM(ЦИМ)。合同只写 waybill 是隐患。",
+      ex: { cn: "运单第 3 栏收货人必须与合同一致。", ru: "Грузополучатель в графе 3 накладной должен совпадать с контрактом." } },
+    { id: "t086", cat: "docs", cn: "提单", ru: "коносамент", en: "bill of lading",
+      ex: { cn: "提单件数与装箱单不一致。", ru: "Количество мест в коносаменте не совпадает с упаковочным листом." } },
+    { id: "t087", cat: "docs", cn: "装箱单", ru: "упаковочный лист", en: "packing list" },
+    { id: "t088", cat: "docs", risk: "high", cn: "商业发票", ru: "коммерческий инвойс", en: "commercial invoice",
+      alt: ["счёт-фактура"],
+      note: "инвойс ≠ счёт-фактура。后者是俄境内增值税票，报关用前者，混写必退。",
+      ex: { cn: "商业发票金额必须与合同一致。", ru: "Сумма коммерческого инвойса должна соответствовать контракту." } },
+    { id: "t089", cat: "docs", cn: "合同", ru: "контракт", en: "contract",
+      alt: ["договор"],
+      note: "对外经贸合同惯用 контракт，境内服务协议用 договор。" },
+    { id: "t090", cat: "docs", cn: "许可证", ru: "лицензия", en: "license" },
+    { id: "t091", cat: "docs", cn: "保单", ru: "страховой полис", en: "insurance policy" },
+    { id: "t092", cat: "docs", cn: "到货通知", ru: "уведомление о прибытии", en: "arrival notice" },
+    { id: "t093", cat: "docs", cn: "提货单", ru: "деливери-ордер", en: "delivery order",
+      alt: ["ордер"],
+      note: "俄方习惯音译 деливери-ордер，缩写作 D/O。",
+      ex: { cn: "凭提货单到堆场提箱。", ru: "Контейнер вывозится со склада по деливери-ордеру." } },
+    { id: "t094", cat: "docs", cn: "唛头", ru: "маркировка", en: "shipping marks" },
+    { id: "t095", cat: "docs", cn: "件数", ru: "количество мест", en: "number of packages",
+      note: "мест 是「件」的量词，不是 место（地点），单复数同形易错。" },
+    { id: "t096", cat: "docs", cn: "毛重", ru: "вес брутто", en: "gross weight" },
+    { id: "t097", cat: "docs", cn: "净重", ru: "вес нетто", en: "net weight" },
+    { id: "t098", cat: "docs", cn: "体积", ru: "объём", en: "volume" },
+    { id: "t099", cat: "docs", cn: "包装", ru: "упаковка", en: "packaging" },
+    { id: "t100", cat: "docs", cn: "托盘", ru: "поддон", en: "pallet" },
+    { id: "t101", cat: "docs", cn: "封条", ru: "пломба", en: "seal" },
+    { id: "t102", cat: "docs", risk: "high", cn: "变更单", ru: "дополнительное соглашение", en: "amendment",
+      note: "变更收货人/到站必须用 доп. соглашение；写 изменение 俄方不受理。",
+      ex: { cn: "变更到站需签署补充协议。", ru: "Для изменения станции назначения требуется дополнительное соглашение." } },
+    { id: "t103", cat: "docs", cn: "电子运单", ru: "электронная накладная", en: "e-waybill" },
+    { id: "t104", cat: "docs", cn: "附页", ru: "дополнительный лист", en: "additional sheet" },
+    { id: "t105", cat: "docs", cn: "签字盖章", ru: "подпись и печать", en: "signature and stamp" },
+    { id: "t106", cat: "docs", cn: "扫描件", ru: "скан-копия", en: "scanned copy" },
+    { id: "t107", cat: "docs", cn: "正本", ru: "оригинал", en: "original" },
+    { id: "t108", cat: "docs", cn: "副本", ru: "копия", en: "copy" },
+    { id: "t109", cat: "docs", cn: "品名", ru: "наименование товара", en: "description of goods" },
+    { id: "t110", cat: "docs", cn: "收货人", ru: "грузополучатель", en: "consignee" },
+    { id: "t111", cat: "docs", cn: "发货人", ru: "грузоотправитель", en: "shipper",
+      note: "两词只差一个字母前缀，抄写错误是退单高频原因。" },
+
+    /* ── 费用 ───────────────────────────────────────────── */
+    { id: "t112", cat: "charge", cn: "运费", ru: "провозная плата", en: "freight",
+      alt: ["фрахт"],
+      note: "铁路用 провозная плата，海运用 фрахт，铁路合同写 фрахт 属术语错位。" },
+    { id: "t113", cat: "charge", cn: "运价", ru: "тариф", en: "tariff" },
+    { id: "t114", cat: "charge", cn: "附加费", ru: "надбавка", en: "surcharge" },
+    { id: "t115", cat: "charge", cn: "燃油附加费", ru: "топливная надбавка", en: "fuel surcharge" },
+    { id: "t116", cat: "charge", cn: "滞箱费", ru: "плата за сверхнормативное использование контейнера", en: "detention",
+      note: "缩写 СИК。免费用箱期须在合同写明，否则按日叠加。",
+      ex: { cn: "免费用箱期 7 天，超期按日计收。", ru: "Бесплатный период — 7 дней, далее плата за сверхнормативное использование." } },
+    { id: "t117", cat: "charge", cn: "堆存费", ru: "плата за хранение", en: "storage fee" },
+    { id: "t118", cat: "charge", risk: "high", cn: "滞留费", ru: "плата за простой", en: "demurrage",
+      note: "俄铁按车/日计收。合同写 demurrage 但俄方只认 простой，纠纷时以俄文本为准。",
+      ex: { cn: "车皮在站停留超 3 天开始计费。", ru: "Плата за простой начисляется после трёх суток стоянки вагона." } },
+    { id: "t119", cat: "charge", cn: "报关服务费", ru: "стоимость таможенных услуг", en: "customs service fee" },
+    { id: "t120", cat: "charge", cn: "保险费", ru: "страховая премия", en: "insurance premium" },
+    { id: "t121", cat: "charge", cn: "预付", ru: "предоплата", en: "prepayment" },
+    { id: "t122", cat: "charge", cn: "账期", ru: "отсрочка платежа", en: "payment term" },
+    { id: "t123", cat: "charge", cn: "对账", ru: "сверка расчётов", en: "reconciliation" },
+    { id: "t124", cat: "charge", cn: "结算", ru: "расчёты", en: "settlement" },
+    { id: "t125", cat: "charge", cn: "汇率差", ru: "курсовая разница", en: "exchange difference",
+      ex: { cn: "按付款日汇率结算，差额由买方承担。", ru: "Расчёты по курсу на дату платежа, разница — за счёт покупателя." } },
+
+    /* ── 异常 ───────────────────────────────────────────── */
+    { id: "t126", cat: "risk", risk: "high", cn: "滞留", ru: "простой", en: "dwell / demurrage",
+      note: "простой 是「停留」这件事，плата за простой 是钱。别只写 простой 就以为在说费用。",
+      ex: { cn: "滞留三天，货主承担滞期费。", ru: "Три дня простоя — плата за простой за счёт грузовладельца." } },
+    { id: "t127", cat: "risk", cn: "货损", ru: "повреждение груза", en: "cargo damage" },
+    { id: "t128", cat: "risk", cn: "短少", ru: "недостача", en: "shortage" },
+    { id: "t129", cat: "risk", cn: "索赔", ru: "претензия", en: "claim",
+      ex: { cn: "索赔需在 6 个月内提出。", ru: "Претензия предъявляется в течение 6 месяцев." } },
+    { id: "t130", cat: "risk", cn: "理赔", ru: "возмещение ущерба", en: "compensation" },
+    { id: "t131", cat: "risk", cn: "不可抗力", ru: "форс-мажор", en: "force majeure",
+      note: "连字符不能省：форс-мажор。口岸拥堵通常不构成不可抗力。",
+      ex: { cn: "口岸拥堵不构成不可抗力。", ru: "Загруженность на пункте пропуска не является форс-мажором." } },
+    { id: "t132", cat: "risk", risk: "high", cn: "退单", ru: "возврат декларации", en: "declaration rejection",
+      note: "译法不一致最常见的后果，重报一次即一列车滞期。",
+      ex: { cn: "译法不一致导致退单。", ru: "Расхождение в переводе привело к возврату декларации." } },
+    { id: "t133", cat: "risk", risk: "high", cn: "重报", ru: "повторная подача декларации", en: "re-filing",
+      ex: { cn: "重报一次，多付两天滞期费。", ru: "Повторная подача декларации — ещё два дня простоя." } },
+    { id: "t134", cat: "risk", cn: "时效", ru: "срок доставки", en: "transit time",
+      ex: { cn: "承诺时效 18 天，实际 24 天。", ru: "Гарантированный срок — 18 дней, фактический — 24 дня." } },
+    { id: "t135", cat: "risk", cn: "承诺时效", ru: "гарантированный срок доставки", en: "guaranteed transit time" },
+    { id: "t136", cat: "risk", cn: "班期", ru: "расписание", en: "schedule" },
+    { id: "t137", cat: "risk", cn: "拥堵", ru: "загруженность", en: "congestion",
+      alt: ["затор"] },
+    { id: "t138", cat: "risk", cn: "责任划分", ru: "разграничение ответственности", en: "liability allocation" },
+    { id: "t139", cat: "risk", cn: "异常件", ru: "проблемный груз", en: "exception cargo" }
+  ]
+};
+
+</script>
+<script>
+/* ============================================================
+   中俄双语物流术语库 — 应用逻辑
+   零依赖 / 纯前端 / 可直接 file:// 打开
+   ============================================================ */
+(function () {
+  "use strict";
+
+  const DATA = window.__ZR_DATA__;
+  const TERMS = (DATA && DATA.terms) || [];
+  const CATS = (DATA && DATA.categories) || [];
+  const CATMAP = Object.fromEntries(CATS.map((c) => [c.id, c]));
+  const LS = { settings: "zr.settings.v1", favs: "zr.favs.v1", theme: "zr.theme.v1" };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = (s) =>
+    String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  /* ── 状态 ───────────────────────────────────────── */
+  const DEFAULTS = {
+    provider: "deepseek",
+    base: "https://api.deepseek.com/v1",
+    model: "deepseek-chat",
+    key: "",
+    temp: 0.3,
+    costDay: 1200,
+    redoDays: 2,
+  };
+
+  function loadJSON(k, fb) {
+    try {
+      const v = JSON.parse(localStorage.getItem(k) || "null");
+      return v == null ? fb : v;
+    } catch (e) {
+      return fb;
+    }
+  }
+  function saveJSON(k, v) {
+    try {
+      localStorage.setItem(k, JSON.stringify(v));
+    } catch (e) {}
+  }
+
+  const state = {
+    q: "",
+    cat: "all",
+    risk: "all",
+    limit: 40,
+    selectedId: null,
+    view: "terms",
+    favs: new Set(loadJSON(LS.favs, [])),
+    settings: Object.assign({}, DEFAULTS, loadJSON(LS.settings, {})),
+  };
+
+  const PROVIDERS = {
+    deepseek: { base: "https://api.deepseek.com/v1", model: "deepseek-chat" },
+    qwen: { base: "https://dashscope.aliyuncs.com/compatible-mode/v1", model: "qwen-plus" },
+    openai: { base: "https://api.openai.com/v1", model: "gpt-4o-mini" },
+    moonshot: { base: "https://api.moonshot.cn/v1", model: "moonshot-v1-8k" },
+    ollama: { base: "http://localhost:11434/v1", model: "qwen2.5:7b" },
+  };
+
+  /* ── 检索索引 ────────────────────────────────────── */
+  const INDEX = TERMS.map((t) => ({
+    t,
+    keys: [t.cn, t.ru, t.en].concat(t.alt || []).map((x) => String(x).toLowerCase()),
+    hay: [t.cn, t.ru, t.en, (t.alt || []).join(" "), t.note || ""].join(" ").toLowerCase(),
+  }));
+
+  function search(text) {
+    const q = String(text || "").trim().toLowerCase();
+    let pool = INDEX;
+    if (state.cat === "fav") pool = pool.filter((i) => state.favs.has(i.t.id));
+    else if (state.cat !== "all") pool = pool.filter((i) => i.t.cat === state.cat);
+    if (state.risk === "high") pool = pool.filter((i) => i.t.risk === "high");
+
+    if (!q) {
+      const arr = pool.map((i) => ({ t: i.t, score: 1 }));
+      return arr.sort((a, b) => (a.t.id > b.t.id ? 1 : -1));
+    }
+
+    const out = [];
+    for (const i of pool) {
+      let score = 0;
+      for (let k = 0; k < i.keys.length; k++) {
+        const key = i.keys[k];
+        if (!key) continue;
+        const bonus = k === 0 ? 6 : k > 2 ? -6 : 0;
+        if (key === q) score = Math.max(score, 120 + bonus);
+        else if (key.startsWith(q)) score = Math.max(score, 92 + bonus);
+        else if (key.includes(q)) score = Math.max(score, 72 + bonus);
+      }
+      if (!score && i.hay.includes(q)) score = 42;
+      if (!score && q.length >= 2) {
+        // 多词命中（支持「报关 单独」这类混排查询）
+        const tokens = q.split(/[\s,，、/;；]+/).filter((x) => x.length >= 1);
+        let hit = 0;
+        for (const tk of tokens) if (i.hay.includes(tk)) hit++;
+        if (hit && hit === tokens.length) score = 30 + hit * 3;
+      }
+      if (score) out.push({ t: i.t, score });
+    }
+    return out.sort((a, b) => b.score - a.score || (a.t.id > b.t.id ? 1 : -1));
+  }
+
+  /* 不受当前筛选影响的检索（供 AI 使用） */
+  function searchPure(text) {
+    const savedCat = state.cat;
+    const savedRisk = state.risk;
+    state.cat = "all";
+    state.risk = "all";
+    const res = search(text);
+    state.cat = savedCat;
+    state.risk = savedRisk;
+    return res;
+  }
+
+  /* ── 高亮 ───────────────────────────────────────── */
+  function hl(text, q) {
+    const t = String(text == null ? "" : text);
+    if (!q) return esc(t);
+    const i = t.toLowerCase().indexOf(q.toLowerCase());
+    if (i < 0) return esc(t);
+    return esc(t.slice(0, i)) + "<mark>" + esc(t.slice(i, i + q.length)) + "</mark>" + esc(t.slice(i + q.length));
+  }
+
+  /* ── 通用 UI ─────────────────────────────────────── */
+  let toastTimer;
+  function toast(msg) {
+    const el = $("#toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 1900);
+  }
+
+  function copy(text, label) {
+    const done = () => toast(label || "已复制");
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, () => fallback());
+    } else fallback();
+
+    function fallback() {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        done();
+      } catch (e) {
+        toast("复制失败，请手动选择");
+      }
+      document.body.removeChild(ta);
+    }
+  }
+
+  /* ── 主题 ───────────────────────────────────────── */
+  function applyTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    saveJSON(LS.theme, t);
+  }
+  applyTheme(loadJSON(LS.theme, "dark") || "dark");
+
+  /* ── 统计 ───────────────────────────────────────── */
+  function renderStats() {
+    const total = TERMS.length;
+    const risk = TERMS.filter((t) => t.risk === "high").length;
+    const core = ["reload", "customs", "space", "docs"];
+    const coreN = TERMS.filter((t) => core.includes(t.cat)).length;
+    $("#mTotal").textContent = total;
+    $("#mTarget").textContent = DATA.target || 300;
+    $("#mRisk").textContent = risk;
+    $("#mCat").textContent = CATS.length;
+    $("#mCover").textContent = Math.round((coreN / total) * 100) + "%";
+    $("#counter").textContent = total + " 条 / " + (DATA.target || 300);
+    $("#edition").textContent = DATA.edition;
+    $("#edition2").textContent = DATA.edition;
+    $("#aboutVer").textContent = DATA.version;
+    $("#footVer").textContent = "v" + DATA.version + " · " + DATA.edition;
+  }
+
+  /* ── 分类筛选 ────────────────────────────────────── */
+  function renderFilters() {
+    const counts = {};
+    CATS.forEach((c) => (counts[c.id] = TERMS.filter((t) => t.cat === c.id).length));
+    let html = `<button class="chip ${state.cat === "all" ? "is-active" : ""}" data-cat="all">
+        全部 <span class="n">${TERMS.length}</span></button>`;
+    html += CATS.map(
+      (c) => `<button class="chip ${state.cat === c.id ? "is-active" : ""}" data-cat="${c.id}" title="${esc(c.desc)}">
+        <i class="cat-dot" style="background:${dotColor(c.id)}"></i>${esc(c.cn)}
+        <span class="n">${counts[c.id]}</span></button>`
+    ).join("");
+    html += `<button class="chip ${state.cat === "fav" ? "is-active" : ""}" data-cat="fav">
+        ★ 收藏 <span class="n">${state.favs.size}</span></button>`;
+    $("#filters").innerHTML = html;
+  }
+
+  function dotColor(cat) {
+    return (
+      { reload: "#C8A15A", customs: "#8FA6C4", space: "#7FB39B", docs: "#C89BA8", charge: "#B9A97E", risk: "#D46A4E" }[cat] || "#888"
+    );
+  }
+
+  /* ── 结果列表 ────────────────────────────────────── */
+  let lastResults = [];
+
+  function renderList() {
+    const res = search(state.q);
+    lastResults = res;
+    const label = state.cat === "fav" ? "收藏词条" : state.cat === "all" ? "全部词条" : CATMAP[state.cat].cn + " 类词条";
+    $("#resultLabel").textContent = state.q ? `「${state.q}」的检索结果` : label;
+    $("#resultCount").textContent = res.length + " 条 · 中 / 俄 / 英";
+
+    const slice = res.slice(0, state.limit);
+    if (!slice.length) {
+      $("#rows").innerHTML = `<tr><td colspan="4" style="padding:38px 16px;text-align:center;color:var(--ink-3);font-size:12.5px">
+        没有匹配的词条。试试「换装 / слот / customs」，或者到 <b style="color:var(--gold)">单证校验</b> 粘贴整段原文。</td></tr>`;
+    } else {
+      $("#rows").innerHTML = slice
+        .map(({ t }) => {
+          const c = CATMAP[t.cat] || { cn: t.cat };
+          return `<tr class="row ${state.selectedId === t.id ? "is-active" : ""}" data-id="${t.id}">
+            <td><div class="cat-cell"><i class="cat-dot" style="background:${dotColor(t.cat)}"></i><span class="tt">${esc(c.cn)}</span></div></td>
+            <td><div class="cell-cn"><i class="cat-dot inline-cat" style="background:${dotColor(t.cat)}"></i>${t.risk === "high" ? '<i class="risk-flag" title="高风险易错词"></i>' : ""}${hl(t.cn, state.q)}</div></td>
+            <td><div class="cell-ru">${hl(t.ru, state.q)}</div></td>
+            <td class="col-en"><div class="cell-en">${hl(t.en, state.q)}</div></td>
+          </tr>`;
+        })
+        .join("");
+    }
+
+    $("#pagerInfo").textContent = `显示 ${Math.min(state.limit, res.length)} / ${res.length}`;
+    $("#moreBtn").hidden = res.length <= state.limit;
+
+    if (state.selectedId && !res.some((r) => r.t.id === state.selectedId) && state.q) {
+      state.selectedId = slice[0] ? slice[0].t.id : null;
+    }
+    if (!state.selectedId && slice.length) state.selectedId = slice[0].t.id;
+    renderDetail();
+  }
+
+  /* ── 详情 ────────────────────────────────────────── */
+  function renderDetail() {
+    const t = TERMS.find((x) => x.id === state.selectedId);
+    if (!t) {
+      $("#detail").innerHTML = `<div class="d-empty"><span class="mark-lg">◈</span>
+        左侧点选任意词条<br>查看三语对照、易错点与例句</div>`;
+      return;
+    }
+    const c = CATMAP[t.cat] || { cn: t.cat };
+    const isFav = state.favs.has(t.id);
+    const rel = TERMS.filter((x) => x.cat === t.cat && x.id !== t.id).slice(0, 4);
+
+    $("#detail").innerHTML = `
+      <div class="detail">
+        <div class="d-eyebrow">
+          <i class="cat-dot" style="background:${dotColor(t.cat)}"></i>${esc(c.cn)} · ${esc(c.ru || "")}
+          <span class="id">${esc(t.id)}</span>
+        </div>
+        <div class="d-lang">
+          <span class="d-lang-tag">中文</span>
+          <h2 class="d-cn">${esc(t.cn)}</h2>
+        </div>
+        <div class="d-lang">
+          <span class="d-lang-tag">русский</span>
+          <div class="d-ru">${esc(t.ru)}</div>
+        </div>
+        <div class="d-lang">
+          <span class="d-lang-tag">english</span>
+          <div class="d-en">${esc(t.en)}</div>
+        </div>
+
+        <div class="d-sep"></div>
+        <div class="d-label">推荐译法 · 点击复制</div>
+        <div class="alt-chips">
+          <button class="alt-chip" data-copy="cn">${esc(t.cn)}</button>
+          <button class="alt-chip" data-copy="ru">${esc(t.ru)}</button>
+          <button class="alt-chip" data-copy="en">${esc(t.en)}</button>
+          <button class="alt-chip" data-copy="triple" title="复制三语一行">⧉ 三语一行</button>
+        </div>
+
+        ${
+          t.alt && t.alt.length
+            ? `<div class="d-sep"></div>
+               <div class="d-label">变体译法 · 易引发不一致</div>
+               <div class="alt-chips">${t.alt.map((a) => `<button class="alt-chip" data-copy-alt="${esc(a)}">${esc(a)}</button>`).join("")}</div>`
+            : ""
+        }
+
+        ${t.note ? `<div class="d-sep"></div><div class="d-label">用法 / 易错点</div><div class="d-note">${esc(t.note)}</div>` : ""}
+
+        ${
+          t.ex
+            ? `<div class="d-sep"></div>
+               <div class="d-label">场景例句</div>
+               <div class="d-ex"><div class="cn">${esc(t.ex.cn)}</div><div class="ru">${esc(t.ex.ru)}</div></div>`
+            : ""
+        }
+
+        <div class="d-sep"></div>
+        <div class="d-meta">
+          <span class="meta-pill">${esc(c.cn)}</span>
+          ${t.risk === "high" ? '<span class="meta-pill risk">高风险易错</span>' : ""}
+          <span class="meta-pill">${(t.alt || []).length} 个变体</span>
+        </div>
+
+        <div class="d-actions">
+          <button class="btn btn-gold" id="dCopy">复制三语</button>
+          <button class="btn btn-ghost" id="dFav">${isFav ? "★ 已收藏" : "☆ 收藏"}</button>
+          <button class="btn btn-ghost" id="dAsk" title="让 AI 解释这个术语">问 AI</button>
+        </div>
+
+        ${
+          rel.length
+            ? `<div class="d-sep"></div><div class="d-label">同类术语</div>
+               <div class="d-rel">${rel
+                 .map(
+                   (r) => `<button class="rel-item" data-id="${r.id}"><b>${esc(r.cn)}</b><span>${esc(r.ru)}</span></button>`
+                 )
+                 .join("")}</div>`
+            : ""
+        }
+      </div>`;
+
+    const triple = `${t.cn} / ${t.ru} / ${t.en}`;
+    const copyBtn = $("#dCopy");
+    if (copyBtn)
+      copyBtn.onclick = () => {
+        copy(triple, "已复制三语");
+        if (state.q) rememberRecent(t);
+      };
+
+    const favBtn = $("#dFav");
+    if (favBtn)
+      favBtn.onclick = () => {
+        if (state.favs.has(t.id)) {
+          state.favs.delete(t.id);
+          toast("已取消收藏");
+        } else {
+          state.favs.add(t.id);
+          toast("已收藏");
+        }
+        saveJSON(LS.favs, Array.from(state.favs));
+        renderFilters();
+        renderDetail();
+        if (state.cat === "fav") renderList();
+      };
+
+    const askBtn = $("#dAsk");
+    if (askBtn) askBtn.onclick = () => askAI(`解释一下「${t.cn}（${t.ru}）」在单证里的正确用法和常见错误`);
+
+    $$("[data-copy-alt]", $("#detail")).forEach((b) => {
+      b.onclick = () => copy(b.dataset.copyAlt);
+    });
+    $$("[data-copy]", $("#detail")).forEach((b) => {
+      b.onclick = () => {
+        const map = { cn: t.cn, ru: t.ru, en: t.en, triple };
+        copy(map[b.dataset.copy] || "", "已复制");
+      };
+    });
+    $$(".rel-item", $("#detail")).forEach((b) => {
+      b.onclick = () => {
+        state.selectedId = b.dataset.id;
+        renderList();
+        $("#detail").scrollTop = 0;
+      };
+    });
+  }
+
+  function rememberRecent(t) {
+    /* 预留：最近查询记录 */
+  }
+
+  /* ── 视图切换 ────────────────────────────────────── */
+  const VIEWS = ["terms", "audit", "api", "about"];
+  function setView(v, fromHash) {
+    if (!VIEWS.includes(v)) v = "terms";
+    state.view = v;
+    $$(".view").forEach((el) => el.classList.toggle("is-active", el.id === "view-" + v));
+    $$(".nav-btn").forEach((b) => b.classList.toggle("is-active", b.dataset.view === v));
+    if (!fromHash) {
+      const hash = "#/" + v + (v === "terms" && state.q ? "?q=" + encodeURIComponent(state.q) : "");
+      history.replaceState(null, "", hash);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function parseHash() {
+    const raw = location.hash.replace(/^#\/?/, "");
+    const [path, query] = raw.split("?");
+    const view = VIEWS.includes(path) ? path : "terms";
+    const params = new URLSearchParams(query || "");
+    if (params.get("q")) {
+      state.q = params.get("q");
+      $("#q").value = state.q;
+    }
+    if (params.get("cat") && (params.get("cat") in CATMAP || params.get("cat") === "fav")) state.cat = params.get("cat");
+    setView(view, true);
+  }
+
+  /* ── 单证校验 ────────────────────────────────────── */
+  function snippet(text, needle) {
+    const i = text.toLowerCase().indexOf(String(needle).toLowerCase());
+    if (i < 0) return "";
+    const start = Math.max(0, i - 26);
+    const end = Math.min(text.length, i + String(needle).length + 26);
+    return (start > 0 ? "…" : "") + text.slice(start, end).replace(/\s+/g, " ") + (end < text.length ? "…" : "");
+  }
+
+  function audit(text) {
+    const lower = text.toLowerCase();
+
+    // 第一遍：找出所有命中的词条
+    const matched = [];
+    for (const t of TERMS) {
+      const cnHit = t.cn.length >= 2 && text.includes(t.cn);
+      const ruHit = lower.includes(String(t.ru).toLowerCase());
+      const enHit = !!t.en && t.en.length > 3 && lower.includes(String(t.en).toLowerCase());
+      const altHits = (t.alt || []).filter((a) => String(a).length >= 3 && lower.includes(String(a).toLowerCase()));
+      if (!cnHit && !ruHit && !enHit && !altHits.length) continue;
+      matched.push({ t, cnHit, ruHit, enHit, altHits });
+    }
+
+    const findings = [];
+    const seen = new Set();
+
+    for (const m of matched) {
+      const { t, cnHit, ruHit, enHit, altHits } = m;
+
+      const variants = [];
+      if (ruHit) variants.push(t.ru);
+      altHits.forEach((a) => {
+        if (a.toLowerCase() !== String(t.ru).toLowerCase()) variants.push(a);
+      });
+
+      // ① 同一术语出现多种译法 —— 最严重
+      if (variants.length >= 2) {
+        if (seen.has("M:" + t.id)) continue;
+        seen.add("M:" + t.id);
+        findings.push({
+          sev: "high",
+          title: `${t.cn} 出现 ${variants.length} 种译法`,
+          msg: `文中同时使用 ${variants.map((x) => `「${x}」`).join(" 与 ")}。俄方按单一译法比对单证，多译法是最常见的退单原因。建议全篇统一为 <b>${esc(t.ru)}</b>。`,
+          snip: snippet(text, variants[1]) || snippet(text, t.cn),
+          term: t,
+        });
+        continue;
+      }
+
+      // ② 使用了非推荐译法
+      if (altHits.length && !ruHit) {
+        if (seen.has("A:" + t.id)) continue;
+        seen.add("A:" + t.id);
+        findings.push({
+          sev: "mid",
+          title: `${t.cn} 使用了非推荐译法`,
+          msg: `文中写「${altHits[0]}」，俄方单证惯用 <b>${esc(t.ru)}</b>。${t.note ? esc(t.note) : ""}`,
+          snip: snippet(text, altHits[0]),
+          term: t,
+        });
+        continue;
+      }
+
+      // ③ 高风险词只有中文，没有对应译文 —— 提示性质，不计入成本
+      if (t.risk === "high" && cnHit && !ruHit && !enHit) {
+        // 若该词只是某个更长的已译词条的一部分（如「报关」⊂「报关单」），不重复报
+        const covered = matched.some(
+          (o) => o.t.id !== t.id && o.t.cn.length > t.cn.length && o.t.cn.includes(t.cn) && (o.ruHit || o.enHit)
+        );
+        if (covered || seen.has("S:" + t.id)) continue;
+        seen.add("S:" + t.id);
+        findings.push({
+          sev: "low",
+          title: `高风险词「${t.cn}」没有对应译文`,
+          msg: `文中只出现中文，未给出 <b>${esc(t.ru)}</b>。中俄对照单证里，这类词缺失常被要求补正；若属有意保留中文，可忽略本条。`,
+          snip: snippet(text, t.cn),
+          term: t,
+        });
+      }
+    }
+
+    const order = { high: 0, mid: 1, low: 2 };
+    findings.sort((a, b) => order[a.sev] - order[b.sev]);
+
+    const high = findings.filter((f) => f.sev === "high").length;
+    const mid = findings.filter((f) => f.sev === "mid").length;
+    const low = findings.filter((f) => f.sev === "low").length;
+    const costDay = Math.max(0, Number(state.settings.costDay) || 0);
+    const redoDays = Math.max(1, Number(state.settings.redoDays) || 1);
+    const riskUnits = high * redoDays + mid * Math.max(1, Math.ceil(redoDays / 2));
+
+    return {
+      findings,
+      high,
+      mid,
+      low,
+      hits: matched.length,
+      cost: riskUnits * costDay,
+      riskUnits,
+      redoDays,
+      costDay,
+      chars: text.length,
+    };
+  }
+
+  function renderAudit(res, text) {
+    const box = $("#auditResult");
+    if (!text.trim()) {
+      box.innerHTML = `<div class="empty-state"><span class="empty-mark">⌁</span><p>还没有校验结果</p>
+        <small>点「开始校验」，或者先载入一份示例单证看看长什么样。</small></div>`;
+      return;
+    }
+    if (!res.findings.length) {
+      box.innerHTML = `
+        <div class="audit-summary">
+          <div class="sum-item safe"><b>0</b><span>译法冲突</span></div>
+          <div class="sum-item safe"><b>0</b><span>待统一译法</span></div>
+          <div class="sum-item"><b>${res.hits}</b><span>命中术语</span></div>
+        </div>
+        <div class="empty-state" style="min-height:240px">
+          <span class="empty-mark" style="color:var(--ok)">✓</span>
+          <p>未发现译法不一致</p>
+          <small>本文命中 ${res.hits} 个已知术语，且每个术语只使用了一种译法。仍需人工核对数字、编码与收货人。</small>
+        </div>`;
+      return;
+    }
+
+    const midDays = Math.max(1, Math.ceil(res.redoDays / 2));
+    box.innerHTML = `
+      <div class="audit-summary">
+        <div class="sum-item ${res.high ? "danger" : ""}"><b>${res.high}</b><span>译法冲突</span></div>
+        <div class="sum-item"><b>${res.mid}</b><span>待统一译法</span></div>
+        <div class="sum-item"><b>${res.low}</b><span>建议补译</span></div>
+      </div>
+      <div class="findings">
+        ${res.findings
+          .slice(0, 16)
+          .map(
+            (f) => `<div class="finding">
+              <i class="sev ${f.sev}"></i>
+              <div class="f-main">
+                <div class="f-head"><b>${esc(f.title)}</b><span class="f-cat">${esc((CATMAP[f.term.cat] || {}).cn || "")}</span></div>
+                <div class="f-msg">${f.msg}</div>
+                ${f.snip ? `<div class="f-snip">${esc(f.snip)}</div>` : ""}
+              </div>
+            </div>`
+          )
+          .join("")}
+      </div>
+      <div class="cost-card">
+        <div class="row-line"><span>译法冲突 ${res.high} 处 × 重报 ${res.redoDays} 天</span><span>${res.high * res.redoDays} 车·日</span></div>
+        <div class="row-line"><span>待统一 ${res.mid} 处 × ${midDays} 天</span><span>${res.mid * midDays} 车·日</span></div>
+        <div class="row-line"><span>单车日滞留成本</span><span>¥${res.costDay.toLocaleString()}</span></div>
+        <div class="row-line dim"><span>命中 ${res.hits} 个术语 / ${res.chars} 字符；建议补译不计入成本</span><span></span></div>
+        <div class="total"><span>保守估算</span><b>¥${res.cost.toLocaleString()}</b></div>
+      </div>`;
+  }
+
+  const SAMPLE = `运输条款摘录（中俄混排）
+1. 本票货物在布列斯特站完成换装（перевалка），换装时间不超过 24 小时。
+2. 换装作业由承运人负责，换装费按 перегрузка 计费标准结算。
+3. 报关单须与运单一致，报关行负责清关（таможенная очистка）。
+4. 若发生滞留，滞留费按 простой 计收；因译法不一致导致退单的，重报费用由责任方承担。
+5. 舱位以 слот 确认为准，舱位被甩时顺延一班。
+6. 海关查验（осмотр）后需二次封箱，关封号回填运单附页。
+7. 商业发票（счёт-фактура）金额须与合同一致。
+8. 宽轨 1520 mm 与准轨 1435 mm 在口岸交接。`;
+
+  /* ── API 调试台 ──────────────────────────────────── */
+  function apiResponse() {
+    const kind = $("#apiEndpoint").value;
+    const param = $("#apiParam").value.trim();
+    const meta = {
+      name: "中俄双语物流术语库 / CN–RU Logistics Glossary",
+      version: DATA.version,
+      updated: DATA.updated,
+      edition: DATA.edition,
+      count: TERMS.length,
+      target: DATA.target,
+      highRisk: TERMS.filter((t) => t.risk === "high").length,
+      byCategory: Object.fromEntries(CATS.map((c) => [c.id, TERMS.filter((t) => t.cat === c.id).length])),
+      license: "MIT (code) / CC BY 4.0 (data)",
+    };
+
+    if (kind === "index") return meta;
+    if (kind === "terms") return { meta, terms: TERMS };
+    if (kind === "search")
+      return {
+        v: DATA.version,
+        terms: TERMS.map((t) => ({ id: t.id, c: t.cat, cn: t.cn, ru: t.ru, en: t.en, alt: t.alt || [] })),
+      };
+    if (kind === "term-id") {
+      const id = param.replace(/^id=/, "").trim() || "t001";
+      const t = TERMS.find((x) => x.id === id);
+      return t || { error: "not_found", id, hint: "id 形如 t001…" };
+    }
+    // term?q=&cat=
+    let q = "";
+    let cat = "";
+    param.split(/&/).forEach((kv) => {
+      const [k, v = ""] = kv.split("=");
+      if (k === "q") q = decodeURIComponent(v.replace(/\+/g, " "));
+      if (k === "cat") cat = v;
+    });
+    let list = q ? search(q).map((r) => r.t) : TERMS.slice();
+    if (cat) list = list.filter((t) => t.cat === cat);
+    return { query: { q, cat: cat || null }, count: list.length, terms: list.slice(0, 50) };
+  }
+
+  function jsonHL(obj) {
+    const raw = JSON.stringify(obj, null, 2) || "";
+    return raw.replace(
+      /("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+      (m, str, colon, bool, num) => {
+        if (str) return `<span class="${colon ? "json-hl-k" : "json-hl-s"}">${esc(str)}</span>` + (colon ? esc(colon) : "");
+        if (bool) return `<span class="json-hl-k">${bool}</span>`;
+        if (num) return `<span class="json-hl-n">${num}</span>`;
+        return esc(m);
+      }
+    );
+  }
+
+  /* ── AI 助手 ─────────────────────────────────────── */
+  const chat = { msgs: [], busy: false, opened: false, greeted: false };
+
+  function aiEls() {
+    return { panel: $("#aiPanel"), body: $("#aiBody"), fab: $("#aiFab"), text: $("#aiText"), send: $("#aiSend"), status: $("#aiStatus"), dot: $("#aiDot") };
+  }
+
+  function syncAIStatus() {
+    const s = state.settings;
+    const live = !!s.key || /localhost|127\.0\.0\.1/.test(s.base || "");
+    const { status, dot } = aiEls();
+    status.textContent = live ? (s.model || "模型已配置") + " · 在线" : "离线检索模式";
+    dot.classList.toggle("live", live);
+  }
+
+  function openAI(on) {
+    const { panel, fab } = aiEls();
+    panel.classList.toggle("is-hidden", !on);
+    fab.classList.toggle("is-hidden", on);
+    chat.opened = on;
+    if (on) {
+      syncAIStatus();
+      if (!chat.greeted) greet();
+      setTimeout(() => $("#aiText").focus(), 120);
+    }
+  }
+
+  function greet() {
+    chat.greeted = true;
+    pushBot(
+      `我是这个术语库的助手。可以帮你**查词、比对译法、写条款**，也能解释校验结果。\n\n术语库现有 **${TERMS.length}** 条，覆盖 ${CATS.map((c) => c.cn).join(" / ")}。`,
+      ["t001"]
+    );
+  }
+
+  function scrollBody() {
+    const b = aiEls().body;
+    b.scrollTop = b.scrollHeight;
+    requestAnimationFrame(() => {
+      b.scrollTop = b.scrollHeight;
+    });
+  }
+
+  function pushMsg(cls, html) {
+    const div = document.createElement("div");
+    div.className = "msg " + cls;
+    div.innerHTML = html;
+    aiEls().body.appendChild(div);
+    scrollBody();
+    return div;
+  }
+
+  function pushBot(text, cardIds) {
+    const div = pushMsg("msg-bot", mdLite(text));
+    if (cardIds && cardIds.length) div.insertAdjacentHTML("beforeend", cardIds.map(termCard).join(""));
+    $$(".term-card", div).forEach((el) => {
+      el.style.cursor = "pointer";
+      el.onclick = () => {
+        state.selectedId = el.dataset.id;
+        renderList();
+      };
+    });
+    scrollBody();
+    return div;
+  }
+
+  function termCard(t) {
+    if (typeof t === "string") t = TERMS.find((x) => x.id === t);
+    if (!t) return "";
+    return `<div class="term-card" data-id="${t.id}">
+      <div class="tc-h"><b>${esc(t.cn)}</b><span>${esc(t.ru)}</span></div>
+      <div class="tc-e">${esc(t.en)}</div>
+      ${t.note ? `<div class="tc-n">${esc(t.note)}</div>` : ""}
+    </div>`;
+  }
+
+  function mdLite(src) {
+    let h = esc(src);
+    h = h.replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+    const blocks = h.split(/\n{2,}/);
+    return blocks
+      .map((b) => {
+        const lines = b.split("\n").filter((l) => l.trim() !== "");
+        if (lines.length && lines.every((l) => /^\s*[-*·]\s+/.test(l))) {
+          return "<ul>" + lines.map((l) => "<li>" + l.replace(/^\s*[-*·]\s+/, "") + "</li>").join("") + "</ul>";
+        }
+        if (lines.length && lines.every((l) => /^\s*\d+[.、)]\s+/.test(l))) {
+          return "<ul>" + lines.map((l) => "<li>" + l.replace(/^\s*\d+[.、)]\s+/, "") + "</li>").join("") + "</ul>";
+        }
+        return "<p>" + b.replace(/\n/g, "<br>") + "</p>";
+      })
+      .join("");
+  }
+
+  /* 从一句话里认出术语（离线脑用） */
+  function termsInSentence(q) {
+    const ql = String(q).toLowerCase();
+    const hits = [];
+    for (const t of TERMS) {
+      let s = 0;
+      if (ql.includes(t.cn)) s = 100 + t.cn.length;
+      else if (ql.includes(String(t.ru).toLowerCase())) s = 96;
+      else if (t.en && t.en.length > 3 && ql.includes(String(t.en).toLowerCase())) s = 90;
+      else if ((t.alt || []).some((a) => a.length >= 3 && ql.includes(a.toLowerCase()))) s = 80;
+      if (s) hits.push({ t, s });
+    }
+    hits.sort((a, b) => b.s - a.s);
+    // 同族去重：已有更长的词条命中（如「报关单」）时，不再保留短词（「报关」）
+    const out = [];
+    for (const h of hits) {
+      if (out.some((o) => o.t.cn.includes(h.t.cn) && o.t.cn !== h.t.cn)) continue;
+      out.push(h);
+    }
+    return out.map((h) => h.t);
+  }
+
+  /* 本地检索脑：无密钥时的降级回答 */
+  function localAnswer(q) {
+    let top = termsInSentence(q).slice(0, 4);
+    if (!top.length) top = searchPure(q).slice(0, 4).map((r) => r.t);
+
+    if (!top.length) {
+      return {
+        text: `术语库里暂时没有直接匹配「${q}」。\n\n可以试：**换装 / слот / 查验 / 滞留 / 退单**，或粘贴一句单证原文，我逐词比对。\n\n想要更自由的对话，点右上 ⚙ 填入任意 OpenAI 兼容接口的 API Key 即可。`,
+        cards: [],
+      };
+    }
+
+    const askingDiff = /区别|差异|对比|不一样|vs|VS|和.*的差别/.test(q);
+    if (askingDiff && top.length >= 2) {
+      const [a, b] = top;
+      return {
+        text: `**${a.cn}** 与 **${b.cn}** 常在单证里被混用，关键差别：\n\n- ${a.cn} / ${a.ru} / ${a.en}${a.note ? "：" + a.note : ""}\n- ${b.cn} / ${b.ru} / ${b.en}${b.note ? "：" + b.note : ""}\n\n写法上建议：同一份单证里各用各的固定译法，不要互相替代。需要具体条款的话告诉我场景（口岸/合同/索赔）。`,
+        cards: [a.id, b.id],
+      };
+    }
+
+    if (/模板|条款|怎么写|如何写/.test(q)) {
+      const t = top[0];
+      return {
+        text: `按术语库口径，**${t.cn}** 相关条款可以这样写：\n\n1. 中文：本票货物在____站完成${t.cn}，作业时间不超过 24 小时。\n2. 俄文：На станции ____ выполняется ${t.ru}, время операции — не более 24 часов.\n3. 英文：Transshipment shall be completed at ____ station within 24 hours.\n\n注意：${t.note || "三语条款中译名须与报关单、运单保持完全一致。"}`,
+        cards: [t.id],
+      };
+    }
+
+    return {
+      text: `从这句话里认出 **${top.length}** 个术语，最相关的先看：`,
+      cards: top.map((t) => t.id),
+    };
+  }
+
+  function systemPrompt(userQuery) {
+    const rel = searchPure(userQuery)
+      .slice(0, 6)
+      .map((r) => `- ${r.t.cn} / ${r.t.ru} / ${r.t.en}${r.t.note ? " — " + r.t.note : ""}`)
+      .join("\n");
+    return `你是「中俄双语物流术语库」内置的术语助手，服务中俄铁路、班列、口岸与关务场景的从业者。
+
+回答要求：
+1. 用简体中文回答，涉及术语时必须给出「中文 / русский / English」三语对照。
+2. 优先采用下面参考术语中的推荐译法，不要自创新译名。
+3. 每个回答控制在 180 字以内；需要列举时用短列表，不要长篇铺垫。
+4. 若问题涉及单证风险，明确指出"会导致退单/滞报/滞期的具体动作"。
+5. 不确定的法规细节，说明以官方口径为准，不要编造条款号。
+
+参考术语（来自本地术语库）：
+${rel || "（无直接匹配，按通用中俄物流术语作答）"}`;
+  }
+
+  async function askAI(text) {
+    const q = String(text || "").trim();
+    if (!q || chat.busy) return;
+    const { body, send, text: input } = aiEls();
+    $("#aiQuick").classList.add("is-hidden");
+    openAI(true);
+
+    pushMsg("msg-user", esc(q));
+    chat.msgs.push({ role: "user", content: q });
+    input.value = "";
+    input.style.height = "auto";
+
+    const s = state.settings;
+    const hasKey = !!s.key;
+    const isLocal = /localhost|127\.0\.0\.1/.test(s.base || "");
+
+    if (!hasKey && !isLocal) {
+      // 离线模式
+      const ans = localAnswer(q);
+      setTimeout(() => pushBot(ans.text, ans.cards), 180);
+      chat.msgs.push({ role: "assistant", content: ans.text });
+      return;
+    }
+
+    chat.busy = true;
+    send.disabled = true;
+    const bubble = pushMsg("msg-bot", '<span class="caret"></span>');
+    let acc = "";
+
+    try {
+      const res = await fetch(String(s.base).replace(/\/+$/, "") + "/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + (s.key || "ollama") },
+        body: JSON.stringify({
+          model: s.model,
+          stream: true,
+          temperature: Number(s.temp) || 0.3,
+          messages: [{ role: "system", content: systemPrompt(q) }].concat(chat.msgs.slice(-8)),
+        }),
+      });
+
+      if (!res.ok) throw new Error((await res.text()).slice(0, 300) || "请求失败 " + res.status);
+
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const parts = buf.split("\n");
+        buf = parts.pop() || "";
+        for (const line of parts) {
+          const l = line.trim();
+          if (!l.startsWith("data:")) continue;
+          const d = l.slice(5).trim();
+          if (d === "[DONE]") continue;
+          try {
+            const j = JSON.parse(d);
+            const delta = j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content;
+            if (delta) {
+              acc += delta;
+              bubble.innerHTML = mdLite(acc) + '<span class="caret"></span>';
+              body.scrollTop = body.scrollHeight;
+            }
+          } catch (e) {}
+        }
+      }
+      bubble.innerHTML = mdLite(acc) || "<p>（空响应）</p>";
+      chat.msgs.push({ role: "assistant", content: acc });
+    } catch (err) {
+      bubble.className = "msg msg-bot msg-err";
+      bubble.innerHTML = `<b>请求失败</b><br>${esc(String(err.message || err).slice(0, 260))}<br><br>
+        可能原因：Key 无效、Base URL 不匹配、或浏览器跨域被拦截。可点 ⚙ 检查配置；也可以临时用离线检索模式。`;
+    } finally {
+      chat.busy = false;
+      send.disabled = false;
+    }
+  }
+
+  /* ── 设置 ────────────────────────────────────────── */
+  function openSheet(on) {
+    $("#sheet").classList.toggle("is-hidden", !on);
+    $("#sheetMask").classList.toggle("is-hidden", !on);
+    if (on) fillSheet();
+  }
+
+  function fillSheet() {
+    const s = state.settings;
+    $("#setBase").value = s.base;
+    $("#setModel").value = s.model;
+    $("#setKey").value = s.key;
+    $("#setTemp").value = s.temp;
+    $("#tempVal").textContent = s.temp;
+    $$("#presetRow .preset").forEach((b) => b.classList.toggle("is-active", b.dataset.preset === s.provider));
+    $("#setHint").textContent = s.key
+      ? "密钥仅保存在本机浏览器，不会上传到任何服务器；请求由浏览器直连你填写的 Base URL。"
+      : "未配置密钥时，助手使用本地术语检索作答，不联网。";
+  }
+
+  function saveSheet() {
+    state.settings.base = $("#setBase").value.trim() || DEFAULTS.base;
+    state.settings.model = $("#setModel").value.trim() || DEFAULTS.model;
+    state.settings.key = $("#setKey").value.trim();
+    state.settings.temp = Number($("#setTemp").value) || 0.3;
+    saveJSON(LS.settings, state.settings);
+    syncAIStatus();
+    toast(state.settings.key ? "已保存，开始测试连接…" : "已保存（离线检索模式）");
+    if (state.settings.key) testConnection();
+    else openSheet(false);
+  }
+
+  async function testConnection() {
+    const s = state.settings;
+    try {
+      const res = await fetch(String(s.base).replace(/\/+$/, "") + "/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + s.key },
+        body: JSON.stringify({
+          model: s.model,
+          stream: false,
+          max_tokens: 8,
+          messages: [{ role: "user", content: "ping" }],
+        }),
+      });
+      if (res.ok) {
+        toast("连接成功 ✓");
+        openSheet(false);
+        pushMsg("msg-sys", `已连接 ${esc(s.model)}`);
+      } else {
+        const t = (await res.text()).slice(0, 120);
+        toast("连接失败：" + (res.status === 401 ? "密钥无效" : res.status));
+        pushMsg("msg-sys", `连接失败 ${res.status} · ${esc(t)}`);
+      }
+    } catch (e) {
+      toast("网络或跨域失败，请检查 Base URL");
+      pushMsg("msg-sys", "跨域/网络失败：" + esc(String(e.message || e).slice(0, 120)));
+    }
+  }
+
+  /* ── 事件绑定 ────────────────────────────────────── */
+  function bind() {
+    // 搜索
+    let t;
+    $("#q").addEventListener("input", (e) => {
+      state.q = e.target.value.trim();
+      state.limit = 40;
+      clearTimeout(t);
+      t = setTimeout(() => {
+        renderList();
+        if (state.view === "terms" && state.q) {
+          history.replaceState(null, "", "#/terms?q=" + encodeURIComponent(state.q));
+        }
+      }, 90);
+    });
+    $("#q").addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        e.target.value = "";
+        state.q = "";
+        renderList();
+      }
+      if (e.key === "Enter") {
+        const first = lastResults[0];
+        if (first) {
+          state.selectedId = first.t.id;
+          renderList();
+          if (window.innerWidth > 980) $("#detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }
+    });
+
+    // 分类 / 风险
+    $("#filters").addEventListener("click", (e) => {
+      const b = e.target.closest(".chip");
+      if (!b) return;
+      state.cat = b.dataset.cat;
+      state.limit = 40;
+      state.selectedId = null;
+      renderFilters();
+      renderList();
+    });
+    $("#riskSeg").addEventListener("click", (e) => {
+      const b = e.target.closest(".seg-btn");
+      if (!b) return;
+      state.risk = b.dataset.risk;
+      $$("#riskSeg .seg-btn").forEach((x) => x.classList.toggle("is-active", x === b));
+      state.limit = 40;
+      renderList();
+    });
+
+    // 行选择
+    $("#rows").addEventListener("click", (e) => {
+      const tr = e.target.closest(".row");
+      if (!tr) return;
+      state.selectedId = tr.dataset.id;
+      renderList();
+      if (window.innerWidth <= 980) {
+        setTimeout(() => $("#detail").scrollIntoView({ behavior: "smooth", block: "start" }), 30);
+      }
+    });
+
+    $("#moreBtn").addEventListener("click", () => {
+      state.limit += 40;
+      renderList();
+    });
+
+    // 导航
+    $$(".nav-btn").forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
+    window.addEventListener("hashchange", parseHash);
+
+    // 主题
+    $("#themeBtn").addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme");
+      applyTheme(cur === "dark" ? "light" : "dark");
+    });
+
+    // AI
+    $("#aiBtn").addEventListener("click", () => openAI(!chat.opened));
+    $("#aiFab").addEventListener("click", () => openAI(true));
+    $("#aiClose").addEventListener("click", () => openAI(false));
+    $("#aiSettingsBtn").addEventListener("click", () => openSheet(true));
+    $("#aiQuick").addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (b) askAI(b.dataset.q);
+    });
+    $("#aiForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      askAI($("#aiText").value);
+    });
+    $("#aiText").addEventListener("input", (e) => {
+      e.target.style.height = "auto";
+      e.target.style.height = Math.min(96, e.target.scrollHeight) + "px";
+    });
+    $("#aiText").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        askAI($("#aiText").value);
+      }
+    });
+
+    // 设置
+    $("#sheetClose").addEventListener("click", () => openSheet(false));
+    $("#sheetMask").addEventListener("click", () => openSheet(false));
+    $("#setSave").addEventListener("click", saveSheet);
+    $("#setClear").addEventListener("click", () => {
+      $("#setKey").value = "";
+      state.settings.key = "";
+      saveJSON(LS.settings, state.settings);
+      syncAIStatus();
+      fillSheet();
+      toast("已清除密钥");
+    });
+    $("#setTemp").addEventListener("input", (e) => {
+      $("#tempVal").textContent = e.target.value;
+      state.settings.temp = Number(e.target.value);
+    });
+    $("#presetRow").addEventListener("click", (e) => {
+      const b = e.target.closest(".preset");
+      if (!b) return;
+      const p = PROVIDERS[b.dataset.preset];
+      state.settings.provider = b.dataset.preset;
+      $("#setBase").value = p.base;
+      $("#setModel").value = p.model;
+      $$("#presetRow .preset").forEach((x) => x.classList.toggle("is-active", x === b));
+    });
+
+    // 单证校验
+    $("#auditText").addEventListener("input", (e) => {
+      $("#auditChars").textContent = e.target.value.length + " 字符";
+    });
+    $("#auditRun").addEventListener("click", () => {
+      const text = $("#auditText").value;
+      if (!text.trim()) {
+        toast("先粘贴一段文本");
+        return;
+      }
+      state.settings.costDay = Math.max(0, Number($("#costDay").value) || 0);
+      state.settings.redoDays = Math.max(1, Number($("#redoDays").value) || 1);
+      saveJSON(LS.settings, state.settings);
+      const res = audit(text);
+      renderAudit(res, text);
+      window.__lastAudit = res;
+    });
+    $("#auditSample").addEventListener("click", () => {
+      $("#auditText").value = SAMPLE;
+      $("#auditChars").textContent = SAMPLE.length + " 字符";
+      $("#auditRun").click();
+    });
+    $("#auditClear").addEventListener("click", () => {
+      $("#auditText").value = "";
+      $("#auditChars").textContent = "0 字符";
+      renderAudit(null, "");
+      window.__lastAudit = null;
+    });
+    $("#auditAsk").addEventListener("click", () => {
+      const text = $("#auditText").value.trim();
+      if (!text) return toast("先粘贴或载入一段文本");
+      const res = window.__lastAudit || audit(text);
+      const brief = res.findings
+        .slice(0, 6)
+        .map((f) => `· ${f.title}`)
+        .join("\n");
+      askAI(
+        `我粘贴了一段中俄单证文字，本地校验发现 ${res.high} 处译法冲突、${res.mid} 处待统一：\n${brief || "（无冲突）"}\n\n请说明这些问题的后果，并给出统一后的三语写法建议。原文片段：\n${text.slice(0, 600)}`
+      );
+    });
+
+    // API 控制台
+    $("#apiRun").addEventListener("click", () => {
+      const el = $("#apiOut");
+      el.innerHTML = jsonHL(apiResponse());
+    });
+    $("#apiEndpoint").addEventListener("change", () => {
+      const v = $("#apiEndpoint").value;
+      $("#apiParam").value = v === "term" ? "q=换装" : v === "term-id" ? "id=t001" : "";
+    });
+    $("#apiCurlCopy").addEventListener("click", () => {
+      const kind = $("#apiEndpoint").value;
+      const param = $("#apiParam").value.trim();
+      const path = kind === "term-id" ? "/api/terms.json/" + (param.replace(/^id=/, "") || "t001") : kind === "index" ? "/api/index.json" : kind === "search" ? "/api/search-index.json" : "/api/terms.json" + (kind === "term" && param ? "?" + param : "");
+      copy(`curl "https://OWNER.github.io/REPO${path}"`, "已复制 curl 命令");
+    });
+
+    $$(".copy-btn").forEach((b) => {
+      b.addEventListener("click", () => {
+        const target = document.getElementById(b.dataset.copyTarget);
+        if (!target) return;
+        const text = target.tagName === "PRE" ? target.textContent : target.textContent;
+        copy(text, "已复制");
+        b.classList.add("done");
+        setTimeout(() => b.classList.remove("done"), 1400);
+      });
+    });
+
+    // 快捷键
+    document.addEventListener("keydown", (e) => {
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setView("terms");
+        $("#q").focus();
+        $("#q").select();
+      } else if (e.key === "/" && !typing) {
+        e.preventDefault();
+        setView("terms");
+        $("#q").focus();
+      } else if (e.key === "Escape") {
+        if (!$("#sheet").classList.contains("is-hidden")) openSheet(false);
+        else if (chat.opened && window.innerWidth > 760) openAI(false);
+      } else if (!typing && (e.key === "ArrowDown" || e.key === "ArrowUp") && state.view === "terms") {
+        const idx = lastResults.findIndex((r) => r.t.id === state.selectedId);
+        if (idx < 0) return;
+        const next = e.key === "ArrowDown" ? Math.min(lastResults.length - 1, idx + 1) : Math.max(0, idx - 1);
+        state.selectedId = lastResults[next].t.id;
+        renderList();
+        const row = $(`.row[data-id="${state.selectedId}"]`);
+        if (row) row.scrollIntoView({ block: "nearest" });
+      }
+    });
+  }
+
+  /* ── 启动 ────────────────────────────────────────── */
+  function boot() {
+    if (!TERMS.length) {
+      document.body.innerHTML = '<p style="padding:40px;font-family:sans-serif">术语数据未加载：请确认 data/terms.js 与 index.html 在同一目录下。</p>';
+      return;
+    }
+    renderStats();
+    renderFilters();
+    parseHash();
+    renderList();
+    bind();
+    syncAIStatus();
+    $("#costDay").value = state.settings.costDay;
+    $("#redoDays").value = state.settings.redoDays;
+    $("#apiParam").value = "";
+  }
+
+  document.addEventListener("DOMContentLoaded", boot);
+})();
+
+</script>
+</body>
+</html>
